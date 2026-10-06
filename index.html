@@ -32,7 +32,7 @@
   --stone:   #E4DFD0;
   --ink:     #0C0C0A;
   --ink2:    #252520;
-  --muted:   #8C8880;
+  --muted:   #6E6A62;
   --g:       #C2560A;
   --gm:      #E0730F;
   --gl:      #FF8A2B;
@@ -139,7 +139,7 @@ body.dark .atlas-pt i{background:var(--stone);border-width:1px;}
 @keyframes flashTarget{0%{box-shadow:0 0 0 0 rgba(255,138,43,0);background:transparent;}18%{box-shadow:0 0 0 7px var(--gp);background:var(--gp);}100%{box-shadow:0 0 0 0 rgba(255,138,43,0);background:transparent;}}
 @media(prefers-reduced-motion:reduce){.flash{animation:none;}}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;font-size:16px;}
+html{scroll-behavior:smooth;font-size:16px;scroll-padding-top:5.5rem;}
 body{
   background:var(--white);
   color:var(--ink);
@@ -701,8 +701,28 @@ body.en .vf-f{display:none!important;}
 /* ═══════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   MOBILE MENU
+═══════════════════════════════════════════ */
+.menu-toggle{display:none;background:none;border:none;padding:0;cursor:none;width:24px;height:24px;gap:4px;flex-direction:column;align-items:center;justify-content:center;z-index:610;}
+.menu-toggle span{display:block;width:20px;height:2px;background:var(--ink);border-radius:1px;transition:all .3s var(--ease);}
+.menu-toggle.active span:nth-child(1){transform:rotate(45deg) translateY(8px);}
+.menu-toggle.active span:nth-child(2){opacity:0;}
+.menu-toggle.active span:nth-child(3){transform:rotate(-45deg) translateY(-8px);}
+.menu-overlay{position:fixed;inset:0;background:var(--white);display:none;flex-direction:column;z-index:600;padding:6rem 2rem;padding-top:7rem;overflow-y:auto;opacity:0;transition:opacity .3s var(--ease);}
+.menu-overlay.open{display:flex;opacity:1;}
+.menu-overlay a{display:block;font-family:var(--serif);font-size:2rem;font-weight:300;color:var(--ink);text-decoration:none;margin-bottom:2.5rem;transition:color .2s;padding:.5rem 0;}
+.menu-overlay a:hover{color:var(--g);}
+.menu-close{position:absolute;top:1.8rem;right:1.8rem;background:none;border:none;cursor:none;width:24px;height:24px;display:flex;align-items:center;justify-content:center;z-index:611;}
+.menu-close span{display:block;width:20px;height:2px;background:var(--ink);position:absolute;border-radius:1px;}
+.menu-close span:first-child{transform:rotate(45deg);}
+.menu-close span:last-child{transform:rotate(-45deg);}
+body.dark .menu-overlay{background:var(--white);}
+body.dark .menu-toggle span,body.dark .menu-close span{background:var(--ink);}
+
 @media(max-width:960px){
   nav{padding:1.2rem 1.5rem;}
+  .menu-toggle{display:flex;}
   .nav-links{display:none;}
   .hero,.section{padding-left:1.5rem;padding-right:1.5rem;}
   section{padding:4rem 1.5rem;}
@@ -968,6 +988,11 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
     <li><a href="#docs" class="vf">Documents</a><a href="#docs" class="ve">Documents</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+
   <button class="dark-btn" id="darkToggle" onclick="toggleDark()" aria-label="Toggle dark mode">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
@@ -979,6 +1004,20 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
     <button class="lb on" onclick="setLang('en')">EN</button>
   </div>
 </nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose"><span></span><span></span></button>
+  <a href="#exp" class="vf">Expérience</a>
+  <a href="#exp" class="ve">Experience</a>
+  <a href="#edu" class="vf">Formation</a>
+  <a href="#edu" class="ve">Education</a>
+  <a href="#certs">Certifications</a>
+  <a href="#finance">Finance</a>
+  <a href="#sport">Sport</a>
+  <a href="#docs" class="vf">Documents</a>
+  <a href="#docs" class="ve">Documents</a>
+  <a href="#contact">Contact</a>
+</div>
 
 <!-- ═══════════════════════════════════════════
      HERO
@@ -2412,6 +2451,49 @@ window.addEventListener('DOMContentLoaded',()=>{
   new IntersectionObserver((e,o)=>{e.forEach(x=>{if(x.isIntersecting){play();o.disconnect();}});},{threshold:.3})
     .observe(document.getElementById('atlas'));
   window.__atlasRefresh=function(){label();draw();readoutPaint();};
+})();
+
+// ── MOBILE MENU ─────────────────────────────
+(function(){
+  const toggle=document.getElementById('menuToggle');
+  const overlay=document.getElementById('menuOverlay');
+  const close=document.getElementById('menuClose');
+  const links=overlay.querySelectorAll('a');
+  let lastFocus=null;
+  const isOpen=()=>overlay.classList.contains('open');
+  function focusables(){
+    return [close].concat(Array.from(links).filter(a=>a.offsetParent!==null));
+  }
+  function openMenu(){
+    lastFocus=document.activeElement;
+    overlay.classList.add('open');toggle.classList.add('active');
+    overlay.removeAttribute('aria-hidden');
+    toggle.setAttribute('aria-expanded','true');
+    document.body.style.overflow='hidden';
+    close.focus();
+  }
+  function closeMenu(){
+    overlay.classList.remove('open');toggle.classList.remove('active');
+    overlay.setAttribute('aria-hidden','true');
+    toggle.setAttribute('aria-expanded','false');
+    document.body.style.overflow='';
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  overlay.setAttribute('aria-hidden','true');
+  toggle.setAttribute('aria-expanded','false');
+  toggle.addEventListener('click',()=>{isOpen()?closeMenu():openMenu();});
+  close.addEventListener('click',closeMenu);
+  links.forEach(a=>a.addEventListener('click',closeMenu));
+  document.addEventListener('keydown',(e)=>{
+    if(!isOpen())return;
+    if(e.key==='Escape'){closeMenu();return;}
+    if(e.key!=='Tab')return;
+    const f=focusables();if(!f.length)return;
+    const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  });
+  window.addEventListener('resize',()=>{if(isOpen()&&window.innerWidth>960)closeMenu();},{passive:true});
 })();
 
 // ── DARK MODE ───────────────────────────────
