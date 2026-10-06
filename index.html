@@ -33,10 +33,10 @@
   --ink:     #0C0C0A;
   --ink2:    #252520;
   --muted:   #8C8880;
-  --g:       #1E5C3A;
-  --gm:      #2D7A52;
-  --gl:      #4DAA78;
-  --gp:      #D4EDDF;
+  --g:       #C2560A;
+  --gm:      #E0730F;
+  --gl:      #FF8A2B;
+  --gp:      #FFE6D2;
   --on-dark: #F4F1EA;
   --serif:   'Cormorant Garamond', Georgia, serif;
   --sans:    'Outfit', system-ui, sans-serif;
@@ -44,6 +44,100 @@
   --ease-out:cubic-bezier(0,0,.2,1);
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
 }
+
+/* ── Barre de progression de lecture ────── */
+.readbar{position:fixed;left:0;bottom:0;height:2px;width:100%;z-index:300;pointer-events:none;background:transparent;}
+.readbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g),var(--gl));}
+
+/* ── Tape : parcours + repères chiffrés ─── */
+.tape{position:relative;background:var(--cream);border-top:1px solid var(--stone);border-bottom:1px solid var(--stone);overflow:hidden;}
+.tape-row{position:relative;overflow:hidden;padding:.95rem 0;}
+.tape-row+.tape-row{border-top:1px solid var(--stone);}
+.tape-row::before,.tape-row::after{content:'';position:absolute;top:0;bottom:0;width:110px;z-index:2;pointer-events:none;}
+.tape-row::before{left:0;background:linear-gradient(90deg,var(--cream) 18%,transparent);}
+.tape-row::after{right:0;background:linear-gradient(270deg,var(--cream) 18%,transparent);}
+.tape-track{display:flex;width:max-content;align-items:center;animation:tapeL 54s linear infinite;}
+.tape-track-rev{animation:tapeR 40s linear infinite;}
+.tape:hover .tape-track{animation-play-state:paused;}
+@keyframes tapeL{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes tapeR{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+.tape-inst{font-family:var(--serif);font-size:1.35rem;font-weight:300;color:var(--ink2);white-space:nowrap;padding:0 1.4rem;display:flex;align-items:center;gap:2.8rem;}
+.tape-inst::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--g);opacity:.55;}
+.tape-num{display:flex;align-items:baseline;gap:.5rem;white-space:nowrap;padding:0 1.5rem;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.tape-num b{font-weight:500;font-size:13px;color:var(--g);letter-spacing:.01em;text-transform:none;}
+@media(prefers-reduced-motion:reduce){.tape-track{animation:none;}}
+@media(max-width:640px){.tape-inst{font-size:1.05rem;gap:1.9rem;padding:0 1rem;}.tape-num{padding:0 1.1rem;}}
+
+/* ── Bloc référence : rupture papier ────── */
+.quote-sec{position:relative;overflow:hidden;background:#F2EFE6;color:#0A0A0B;padding:9rem 0;}
+.quote-sec::before{content:'\201C';position:absolute;top:-3.5rem;left:-1.5rem;font-family:var(--serif);font-size:30rem;line-height:1;color:rgba(10,10,11,.055);pointer-events:none;user-select:none;}
+.quote-inner{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:0 2rem;}
+.quote-kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#B2560F;margin-bottom:2.4rem;}
+.quote-text{font-family:var(--serif);font-size:clamp(2.2rem,6.4vw,4.4rem);font-weight:300;line-height:1.08;letter-spacing:-.02em;color:#0A0A0B;margin-bottom:3rem;max-width:14ch;}
+.quote-meta{border-left:2px solid #FF8A2B;padding-left:1.3rem;display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;}
+.quote-who{font-size:14px;letter-spacing:.02em;color:#0A0A0B;}
+.quote-role{font-size:12.5px;color:rgba(10,10,11,.5);line-height:1.65;max-width:52ch;}
+.quote-link{margin-top:.9rem;font-size:12.5px;color:#B2560F;text-decoration:none;border-bottom:1px solid rgba(178,86,15,.32);padding-bottom:2px;transition:color .2s,border-color .2s;}
+.quote-link:hover{color:#0A0A0B;border-color:#0A0A0B;}
+@media(max-width:640px){.quote-sec{padding:5.5rem 0;}.quote-text{max-width:none;}.quote-sec::before{font-size:16rem;top:-1.5rem;}}
+
+/* ── Atlas : parcours scolaire ───────────── */
+.atlas{position:relative;background:var(--white);border-bottom:1px solid var(--stone);overflow:hidden;}
+.atlas-stage{position:relative;width:100%;height:clamp(420px,74vh,680px);}
+.atlas-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.atlas-pts{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.atlas-pt{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;opacity:0;transition:opacity .35s;}
+.atlas-pt.vis{opacity:1;}
+.atlas-pt i{display:block;width:9px;height:9px;border-radius:50%;background:var(--white);border:1.5px solid var(--muted);transition:background .35s,border-color .35s,box-shadow .35s;}
+body.dark .atlas-pt i{background:var(--stone);border-width:1px;}
+.atlas-pt span{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gl);white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;}
+.atlas-pt:hover i,.atlas-pt.on i{background:var(--gl);border-color:var(--gl);box-shadow:0 0 0 5px rgba(255,138,43,.14);}
+.atlas-pt:hover span,.atlas-pt.on span{opacity:1;}
+.atlas-pt.on i{animation:atlasPing 2.4s infinite;}
+@keyframes atlasPing{0%{box-shadow:0 0 0 0 rgba(255,138,43,.38);}70%{box-shadow:0 0 0 15px rgba(255,138,43,0);}100%{box-shadow:0 0 0 0 rgba(255,138,43,0);}}
+@media(prefers-reduced-motion:reduce){.atlas-pt.on i{animation:none;}}
+
+.atlas-readout{position:absolute;right:1.8rem;bottom:1.4rem;z-index:4;text-align:right;pointer-events:none;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:10.5px;line-height:1.75;letter-spacing:.1em;color:var(--muted);}
+.atlas-readout b{color:var(--gl);font-weight:400;}
+.atlas-reset{position:absolute;top:1.6rem;right:1.8rem;z-index:5;background:none;border:1px solid var(--stone);color:var(--muted);border-radius:4px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,color .25s,border-color .25s;}
+.atlas-reset.vis{opacity:1;pointer-events:auto;}
+.atlas-reset:hover{color:var(--gl);border-color:var(--gl);}
+
+.atlas-ui{position:relative;max-width:1180px;margin:0 auto;padding:0 2rem 2.8rem;}
+.atlas-head{position:absolute;top:calc(-1 * clamp(420px,74vh,680px) + 2.6rem);left:2rem;pointer-events:none;}
+.atlas-kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gl);margin-bottom:.7rem;}
+.atlas-title{font-family:var(--serif);font-size:clamp(1.7rem,3.6vw,2.6rem);font-weight:300;letter-spacing:-.015em;color:var(--ink);line-height:1.1;}
+
+.atlas-card{max-width:440px;margin-top:-8rem;position:relative;z-index:3;background:var(--cream);border:1px solid var(--stone);border-radius:10px;padding:1.35rem 1.55rem;}
+.atlas-yr{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:.1em;color:var(--gl);margin-bottom:.5rem;}
+.atlas-city{font-family:var(--serif);font-size:1.65rem;font-weight:300;color:var(--ink);line-height:1.15;}
+.atlas-cc{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:.25rem 0 .85rem;}
+.atlas-note{font-size:13px;line-height:1.65;color:var(--ink2);}
+
+.atlas-time{margin-top:1.9rem;}
+.atlas-axis{display:flex;gap:3px;align-items:flex-end;}
+.atlas-seg{flex-basis:0;height:42px;background:none;border:0;padding:0;position:relative;cursor:pointer;font-family:inherit;}
+.atlas-seg::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--stone);transition:background .3s,height .25s;}
+.atlas-seg:hover::after{background:var(--muted);}
+.atlas-seg.on::after{background:var(--gl);height:6px;}
+.atlas-seg b{position:absolute;left:0;bottom:13px;white-space:nowrap;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:10px;font-weight:400;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);opacity:0;transition:opacity .25s,color .25s;}
+.atlas-seg.on b,.atlas-seg:hover b{opacity:1;color:var(--gl);}
+.atlas-scale{position:relative;height:14px;margin-top:.6rem;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);opacity:.65;}
+.atlas-scale span{position:absolute;top:0;transform:translateX(-50%);}
+.atlas-scale span:first-child{transform:none;}
+.atlas-scale span:last-child{transform:translateX(-100%);}
+@media(max-width:860px){
+  .atlas-head{left:1.2rem;top:calc(-1 * clamp(420px,74vh,680px) + 1.6rem);}
+  .atlas-ui{padding:0 1.2rem 2.2rem;}
+  .atlas-card{max-width:none;margin-top:-5.5rem;}
+  .atlas-readout{right:1.1rem;bottom:1rem;font-size:9.5px;}
+  .atlas-reset{right:1.1rem;top:1.1rem;}
+  .atlas-seg b{display:none;}
+}
+/* ── Mise en évidence d'une cible après clic ── */
+.flash{animation:flashTarget 1.6s var(--ease);border-radius:8px;}
+@keyframes flashTarget{0%{box-shadow:0 0 0 0 rgba(255,138,43,0);background:transparent;}18%{box-shadow:0 0 0 7px var(--gp);background:var(--gp);}100%{box-shadow:0 0 0 0 rgba(255,138,43,0);background:transparent;}}
+@media(prefers-reduced-motion:reduce){.flash{animation:none;}}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;font-size:16px;}
 body{
@@ -110,7 +204,9 @@ nav.scrolled{
 .nav-logo:hover{opacity:.7;}
 .nav-logo svg{width:44px;height:32px;overflow:visible;}
 
-.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none;}
+.nav-links li{display:flex;align-items:center;line-height:1;}
+.nav-links li a{display:block;line-height:1;}
 .nav-links a{
   font-size:11px;font-weight:400;letter-spacing:.12em;
   text-transform:uppercase;color:var(--muted);text-decoration:none;
@@ -210,9 +306,9 @@ nav.scrolled{
 .btn:hover{transform:translateY(-2px);}
 .btn-primary{
   background:var(--g);color:var(--white);
-  box-shadow:0 2px 12px rgba(30,92,58,.25);
+  box-shadow:0 2px 12px rgba(194,86,10,.25);
 }
-.btn-primary:hover{background:var(--gm);box-shadow:0 8px 24px rgba(30,92,58,.3);}
+.btn-primary:hover{background:var(--gm);box-shadow:0 8px 24px rgba(194,86,10,.3);}
 .btn-secondary{
   background:transparent;color:var(--ink);
   border:1px solid var(--stone);
@@ -305,9 +401,9 @@ section{padding:6rem 3rem;}
   background:linear-gradient(to right,var(--g),var(--gl));
   transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease);
 }
-.pcard:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(30,92,58,.09);border-color:rgba(77,170,120,.4);}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(194,86,10,.09);border-color:rgba(255,138,43,.4);}
 .pcard:hover::after,.pcard.on::after{transform:scaleX(1);}
-.pcard.on{border-color:var(--g);box-shadow:0 0 0 1px var(--g),0 12px 32px rgba(30,92,58,.1);}
+.pcard.on{border-color:var(--g);box-shadow:0 0 0 1px var(--g),0 12px 32px rgba(194,86,10,.1);}
 .pcard-num{
   font-family:var(--serif);font-size:2.8rem;font-weight:300;
   font-style:italic;color:var(--stone);line-height:1;margin-bottom:.5rem;
@@ -415,7 +511,7 @@ section{padding:6rem 3rem;}
   will-change:transform;
 }
 .ccard:hover{transform:translateY(-4px) perspective(600px) rotateX(2deg);box-shadow:0 16px 32px rgba(0,0,0,.07);}
-.ccard.focused{border-color:var(--g);box-shadow:0 0 0 1px var(--g),0 8px 24px rgba(30,92,58,.12);}
+.ccard.focused{border-color:var(--g);box-shadow:0 0 0 1px var(--g),0 8px 24px rgba(194,86,10,.12);}
 .ccard.dimmed{opacity:.22;transform:scale(.97);}
 .cert-logo{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gm);background:var(--gp);display:inline-block;padding:4px 12px;border-radius:20px;width:fit-content;}
 .cert-name{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--ink);}
@@ -435,7 +531,7 @@ section{padding:6rem 3rem;}
   width:200px;height:200px;display:block;
   margin:0 auto 1.5rem;
   transform:rotate(-90deg);
-  filter:drop-shadow(0 4px 12px rgba(30,92,58,.12));
+  filter:drop-shadow(0 4px 12px rgba(194,86,10,.12));
 }
 .dseg{
   cursor:none;
@@ -529,7 +625,7 @@ section{padding:6rem 3rem;}
 .sp-miles{position:absolute;top:-4px;left:0;right:0;}
 .sp-m{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;}
 .sp-md{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.18);transition:all .5s;}
-.sp-m.done .sp-md{background:var(--gl);border-color:var(--gl);box-shadow:0 0 8px rgba(77,170,120,.5);}
+.sp-m.done .sp-md{background:var(--gl);border-color:var(--gl);box-shadow:0 0 8px rgba(255,138,43,.5);}
 .sp-ml{font-size:10px;color:rgba(255,255,255,.3);white-space:nowrap;margin-top:14px;}
 .sp-m.done .sp-ml{color:var(--gl);}
 .snext{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);font-size:13px;color:rgba(250,250,247,.45);}
@@ -586,8 +682,8 @@ section{padding:6rem 3rem;}
   cursor:none;will-change:transform;
 }
 .cl:hover{transform:translateY(-3px);}
-.cl-p{background:var(--g);color:var(--white);box-shadow:0 2px 12px rgba(30,92,58,.3);}
-.cl-p:hover{background:var(--gm);box-shadow:0 8px 24px rgba(30,92,58,.4);}
+.cl-p{background:var(--g);color:var(--white);box-shadow:0 2px 12px rgba(194,86,10,.3);}
+.cl-p:hover{background:var(--gm);box-shadow:0 8px 24px rgba(194,86,10,.4);}
 .cl-s{background:transparent;color:rgba(250,250,247,.58);border:1px solid rgba(255,255,255,.12);}
 .cl-s:hover{color:var(--white);border-color:rgba(255,255,255,.3);}
 .cfoot{font-size:12px;color:rgba(255,255,255,.18);}
@@ -632,20 +728,20 @@ body.en .vf-f{display:none!important;}
 }
 .reset-filter:hover{background:var(--gp);color:var(--g);}
 
-/* ── DARK MODE (Forêt nocturne — vert, raccord avec le mode clair) ──── */
+/* ── TERMINAL (thème par défaut) ─────────── */
 body.dark{
-  --white:#0B0F0C;
-  --cream:#121815;
-  --stone:#28342C;
-  --ink:#EAE8E0;
-  --ink2:#B4B6AC;
-  --muted:#7E887C;
-  --g:#5FB98A;
-  --gm:#7FCFA4;
-  --gl:#A6E3C2;
-  --gp:rgba(95,185,138,.15);
+  --white:#08080A;
+  --cream:#101014;
+  --stone:#23232B;
+  --ink:#F0EEE9;
+  --ink2:#C4C2BC;
+  --muted:#7E7D88;
+  --g:#FF8A2B;
+  --gm:#FFA254;
+  --gl:#FFC08A;
+  --gp:rgba(255,138,43,.15);
 }
-body.dark nav.scrolled{background:rgba(14,14,12,.96);}
+body.dark nav.scrolled{background:rgba(8,8,10,.94);}
 body.dark .edu-main{background:var(--cream);}
 body.dark .sport-main{background:var(--cream);}
 body.dark .phil{background:var(--cream);}
@@ -662,7 +758,7 @@ body.dark .ctitle,
 body.dark .cl-s:hover,
 body.dark .kpi-card{color:var(--on-dark);}
 body.dark .ftab.on,body.dark .ftab:hover{background:var(--g);border-color:var(--g);color:var(--white);}
-body.dark .hero-globe{opacity:.24;}
+body.dark .hero-globe{opacity:.17;}
 body.dark .dark-btn{color:var(--gl);}
 .dark-btn{
   background:none;border:none;cursor:none;
@@ -686,7 +782,7 @@ body.dark .dark-btn:hover{background:rgba(255,255,255,.06);}
 /* ── Bloc disponibilité (hero) ───────────── */
 .avail-row{display:flex;align-items:center;gap:.65rem;}
 .avail-dot{width:8px;height:8px;border-radius:50%;background:var(--gm);flex-shrink:0;animation:availPulse 2.6s infinite;}
-@keyframes availPulse{0%{box-shadow:0 0 0 0 rgba(45,122,82,.45);}70%{box-shadow:0 0 0 9px rgba(45,122,82,0);}100%{box-shadow:0 0 0 0 rgba(45,122,82,0);}}
+@keyframes availPulse{0%{box-shadow:0 0 0 0 rgba(255,138,43,.45);}70%{box-shadow:0 0 0 9px rgba(255,138,43,0);}100%{box-shadow:0 0 0 0 rgba(255,138,43,0);}}
 @media(prefers-reduced-motion:reduce){.avail-dot{animation:none;}}
 .avail-main{font-family:var(--serif);font-size:1.3rem;font-weight:300;color:var(--ink);line-height:1.25;}
 .avail-sub{font-size:11px;color:var(--muted);letter-spacing:.06em;line-height:1.6;}
@@ -766,8 +862,8 @@ body.dark .sc{background:var(--cream);}
 body.dark .edu-card{background:var(--cream);}
 body.dark .ccard{background:var(--ink2);}
 body.dark .dcard{background:var(--cream);}
-body.dark .cert-logo{background:rgba(77,170,120,.2);}
-body.dark .ebadge,.body.dark .exp-badge{background:rgba(77,170,120,.15);}
+body.dark .cert-logo{background:rgba(255,138,43,.16);}
+body.dark .ebadge,.body.dark .exp-badge{background:rgba(255,138,43,.13);}
 
 body.dark .kpi-card{background:var(--stone);border:1px solid var(--stone);}
 body.dark .kpi-val{color:var(--on-dark);}
@@ -822,9 +918,7 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
 // ── THÈME : appliqué avant le rendu pour éviter tout flash ──
 (function(){
   var saved=null;try{saved=localStorage.getItem('mc-dark');}catch(e){}
-  var dark = saved!==null
-    ? saved==='1'
-    : (window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+  var dark = saved!==null ? saved==='1' : true;
   if(dark)document.body.classList.add('dark');
 })();
 </script>
@@ -980,12 +1074,45 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
     </div>
   </div>
 
+  <div class="readbar"><i id="readbarFill"></i></div>
   <div class="scroll-ind"><span class="sl"></span><span class="vf">Défiler</span><span class="ve">Scroll</span></div>
 </section>
+
+<div class="tape" aria-label="Parcours et repères chiffrés">
+  <div class="tape-row"><div class="tape-track"><span class="tape-inst">NEOMA Business School</span><span class="tape-inst">Università Cattolica del Sacro Cuore</span><span class="tape-inst">Yale University</span><span class="tape-inst">IBM</span><span class="tape-inst">Sideros Engineering</span><span class="tape-inst">CheckYeti</span><span class="tape-inst">Ford Performance</span><span class="tape-inst">Renault</span><span class="tape-inst">Lycée Français de Vienne</span><span class="tape-inst">NEOMA Business School</span><span class="tape-inst">Università Cattolica del Sacro Cuore</span><span class="tape-inst">Yale University</span><span class="tape-inst">IBM</span><span class="tape-inst">Sideros Engineering</span><span class="tape-inst">CheckYeti</span><span class="tape-inst">Ford Performance</span><span class="tape-inst">Renault</span><span class="tape-inst">Lycée Français de Vienne</span></div></div>
+  <div class="tape-row"><div class="tape-track tape-track-rev"><span class="tape-num vf-flex-item"><b>811</b>entreprises réengagées</span><span class="tape-num ve-flex-item"><b>811</b>companies re-engaged</span><span class="tape-num vf-flex-item"><b>150 000 €</b>de volume d'affaires</span><span class="tape-num ve-flex-item"><b>150 000 €</b>business volume</span><span class="tape-num vf-flex-item"><b>1 000+</b>messages en 4 langues</span><span class="tape-num ve-flex-item"><b>1 000+</b>messages in 4 languages</span><span class="tape-num vf-flex-item"><b>6 %</b>de réponse sur base dormante</span><span class="tape-num ve-flex-item"><b>6 %</b>response on a dormant base</span><span class="tape-num vf-flex-item"><b>26</b>examens validés</span><span class="tape-num ve-flex-item"><b>26</b>exams passed</span><span class="tape-num vf-flex-item"><b>60</b>CFU · MINT</span><span class="tape-num ve-flex-item"><b>60</b>CFU · MINT</span><span class="tape-num vf-flex-item"><b>4</b>pays de scolarité</span><span class="tape-num ve-flex-item"><b>4</b>countries schooled in</span><span class="tape-num vf-flex-item"><b>7.0</b>IELTS Academic · C1</span><span class="tape-num ve-flex-item"><b>7.0</b>IELTS Academic · C1</span><span class="tape-num vf-flex-item"><b>1:53:15</b>semi-marathon de Milan</span><span class="tape-num ve-flex-item"><b>1:53:15</b>Milan half-marathon</span><span class="tape-num vf-flex-item"><b>811</b>entreprises réengagées</span><span class="tape-num ve-flex-item"><b>811</b>companies re-engaged</span><span class="tape-num vf-flex-item"><b>150 000 €</b>de volume d'affaires</span><span class="tape-num ve-flex-item"><b>150 000 €</b>business volume</span><span class="tape-num vf-flex-item"><b>1 000+</b>messages en 4 langues</span><span class="tape-num ve-flex-item"><b>1 000+</b>messages in 4 languages</span><span class="tape-num vf-flex-item"><b>6 %</b>de réponse sur base dormante</span><span class="tape-num ve-flex-item"><b>6 %</b>response on a dormant base</span><span class="tape-num vf-flex-item"><b>26</b>examens validés</span><span class="tape-num ve-flex-item"><b>26</b>exams passed</span><span class="tape-num vf-flex-item"><b>60</b>CFU · MINT</span><span class="tape-num ve-flex-item"><b>60</b>CFU · MINT</span><span class="tape-num vf-flex-item"><b>4</b>pays de scolarité</span><span class="tape-num ve-flex-item"><b>4</b>countries schooled in</span><span class="tape-num vf-flex-item"><b>7.0</b>IELTS Academic · C1</span><span class="tape-num ve-flex-item"><b>7.0</b>IELTS Academic · C1</span><span class="tape-num vf-flex-item"><b>1:53:15</b>semi-marathon de Milan</span><span class="tape-num ve-flex-item"><b>1:53:15</b>Milan half-marathon</span></div></div>
+</div>
 
 <!-- ═══════════════════════════════════════════
      01 — EXPÉRIENCE
 ════════════════════════════════════════════ -->
+
+<section class="atlas" id="atlas" aria-label="Parcours scolaire">
+  <div class="atlas-stage">
+    <canvas class="atlas-canvas" id="atlasCanvas"></canvas>
+    <div class="atlas-pts" id="atlasPts"></div>
+    <button class="atlas-reset" id="atlasReset" type="button"><span class="vf">↺ Vue monde</span><span class="ve">↺ World view</span></button>
+    <div class="atlas-readout" id="atlasReadout"></div>
+  </div>
+  <div class="atlas-ui">
+    <div class="atlas-head">
+      <div class="atlas-kicker vf">Parcours</div><div class="atlas-kicker ve">Journey</div>
+      <div class="atlas-title vf">Quatre pays,<br>trois continents</div>
+      <div class="atlas-title ve">Four countries,<br>three continents</div>
+    </div>
+    <div class="atlas-card" id="atlasCard" aria-live="polite">
+      <div class="atlas-yr" id="atlasYr"></div>
+      <div class="atlas-city" id="atlasCity"></div>
+      <div class="atlas-cc" id="atlasCc"></div>
+      <div class="atlas-note" id="atlasNote"></div>
+    </div>
+    <div class="atlas-time">
+      <div class="atlas-axis" id="atlasAxis" role="tablist"></div>
+      <div class="atlas-scale"><span style="left:0">2004</span><span style="left:29.2%">2015</span><span style="left:48.9%">2020</span><span style="left:75.2%">2023</span><span style="left:100%">2027</span></div>
+    </div>
+  </div>
+</section>
+
 <section id="exp" class="exp-sec">
   <div class="inner">
     <div class="sh rv">
@@ -1094,6 +1221,23 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
 <!-- ═══════════════════════════════════════════
      02 — FORMATION
 ════════════════════════════════════════════ -->
+
+<section class="quote-sec rv" aria-label="Référence professionnelle">
+  <div class="quote-inner">
+    <div class="quote-kicker vf">Référence</div>
+    <div class="quote-kicker ve">Reference</div>
+    <blockquote class="quote-text">&ldquo;What I valued most was his autonomy.&rdquo;</blockquote>
+    <div class="quote-meta">
+      <div class="quote-who">Matteo Callisardi</div>
+      <div class="quote-role vf">Sales Manager, marchés export européens · Sideros Engineering — quinze ans dans la vente internationale avant de rejoindre le groupe. Lettre signée le 24 septembre 2026.</div>
+      <div class="quote-role ve">Sales Manager, European export markets · Sideros Engineering — fifteen years in international sales before joining the company. Letter signed 24 September 2026.</div>
+      <a class="quote-link" href="Recommendation_Letter_Sideros.pdf" target="_blank" rel="noopener">
+        <span class="vf">Lire la lettre complète →</span><span class="ve">Read the full letter →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section id="edu" class="edu-sec">
   <div class="inner">
     <div class="sh rv">
@@ -1102,7 +1246,7 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
       <h2 class="st ve"><em>Education</em> & journey</h2>
     </div>
     <div class="preview-grid rv2" id="eduPrev">
-      <div class="pcard" data-detail="eduDet" data-focus="all">
+      <div class="pcard" data-jump="atlas">
         <div class="pcard-num">5</div>
         <div class="pcard-title vf">Pays de scolarité</div><div class="pcard-title ve">Countries studied in</div>
         <div class="pcard-sub">France · South Africa · Singapore · Austria · Italy</div>
@@ -1291,8 +1435,8 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
       <div class="pcard" data-detail="finDet" data-focus="all" data-acc-open="3">
         <div class="pcard-num">5</div>
         <div class="pcard-title vf">Règles écrites</div><div class="pcard-title ve">Written rules</div>
-        <div class="pcard-sub vf">Tenues depuis trois ans · plafond crypto, pas de vente avant terme</div>
-        <div class="pcard-sub ve">Held for three years · crypto cap, no selling before term</div>
+        <div class="pcard-sub vf">Tenues depuis trois ans · elles décident à ma place quand les marchés bougent</div>
+        <div class="pcard-sub ve">Held for three years · they decide for me when markets move</div>
         <div class="pcard-hint vf">Voir les règles</div><div class="pcard-hint ve">See rules</div>
       </div>
     </div>
@@ -1362,11 +1506,11 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
               </div>
               <div class="ai" data-i="3">
                 <div class="ah"><div class="a-dot" style="background:#7A6850"></div>
-                  <div class="a-info"><div class="a-n">Crypto <span class="a-pct">~8%</span></div><div class="a-s vf">Panier figé SOL · LINK · AAVE — plafond 5%</div><div class="a-s ve">Fixed basket SOL · LINK · AAVE — 5% cap</div></div>
+                  <div class="a-info"><div class="a-n">Crypto <span class="a-pct">~8%</span></div><div class="a-s vf">Panier figé SOL · LINK · AAVE — plafond à l'achat 5%</div><div class="a-s ve">Fixed basket SOL · LINK · AAVE — 5% cap on contributions</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">Position satellite, panier figé : SOL en staking, LINK, AAVE. Le plafond que je me suis fixé est de 5 % du patrimoine brut ; la poche est aujourd'hui au-dessus après la hausse. Je ne vends pas pour rééquilibrer, mais les versements sont suspendus jusqu'à ce que la poche repasse sous le seuil. Pas de levier, pas de dérivés, pas de rotation.</div>
-                <div class="ab ve">A satellite position, fixed basket: SOL staked, LINK, AAVE. My own cap is 5% of gross assets; the pocket currently sits above it after the rally. I do not sell to rebalance, but contributions are suspended until it drops back under the threshold. No leverage, no derivatives, no rotation.</div>
+                <div class="ab vf">Position satellite, panier figé : SOL en staking, LINK, AAVE. La règle porte sur ce que j'investis, pas sur ce que vaut la poche : je n'apporte plus un euro dès que la crypto dépasse 5 % du patrimoine brut. Elle est aujourd'hui au-dessus après la hausse, donc les versements sont à l'arrêt — mais je ne vends pas pour rééquilibrer, parce qu'une vente forcée coûte plus cher que le déséquilibre qu'elle corrige. Pas de levier, pas de dérivés, pas de rotation.</div>
+                <div class="ab ve">A satellite position, fixed basket: SOL staked, LINK, AAVE. The rule governs what I put in, not what the pocket is worth: not another euro goes in once crypto exceeds 5% of gross assets. It currently sits above that after the rally, so contributions are halted — but I do not sell to rebalance, because a forced sale costs more than the drift it corrects. No leverage, no derivatives, no rotation.</div>
               </div>
               <div class="ai" data-i="2">
                 <div class="ah"><div class="a-dot" style="background:#5A8FAE"></div>
@@ -1378,25 +1522,25 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
               </div>
               <div class="ai" data-i="4">
                 <div class="ah"><div class="a-dot" style="background:#3D6E96"></div>
-                  <div class="a-info"><div class="a-n vf">Liquidités <span class="a-pct">~2%</span></div><div class="a-n ve">Cash <span class="a-pct">~2%</span></div><div class="a-s vf">Matelas de précaution · à reconstituer</div><div class="a-s ve">Buffer · being rebuilt</div></div>
+                  <div class="a-info"><div class="a-n vf">Liquidités <span class="a-pct">~2%</span></div><div class="a-n ve">Cash <span class="a-pct">~2%</span></div><div class="a-s vf">Matelas de précaution · volontairement bas</div><div class="a-s ve">Buffer · deliberately thin</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">La poche la plus faible, et la seule qui me pose un vrai problème aujourd'hui : sans revenu jusqu'au stage de janvier, le matelas de précaution est descendu bien en dessous du seuil que je vise. La reconstituer est l'objectif numéro un du premier salaire — avant tout versement sur les autres poches.</div>
-                <div class="ab ve">The smallest pocket, and the only one that is genuinely a problem right now: with no income until the January internship, the buffer has fallen well below the level I target. Rebuilding it is the first claim on the first paycheck — ahead of any contribution to the other pockets.</div>
+                <div class="ab vf">Poche volontairement faible : un étudiant sans revenu jusqu'au stage de janvier n'a pas de trésorerie à faire dormir, et chaque euro laissé en liquidités est un euro qui ne travaille pas pendant trois ans. L'ordre de priorité est écrit d'avance — le premier salaire remonte cette poche avant d'alimenter les autres.</div>
+                <div class="ab ve">Deliberately thin: a student with no income until the January internship has no cash to park, and every euro left in cash is a euro not working for three years. The order of priority is written in advance — the first paycheck tops this pocket up before feeding the others.</div>
               </div>
             </div>
             <div class="phil">
               <div class="pq vf">"Préférer des règles simples et tenues dans le temps à des stratégies complexes mal exécutées."</div>
               <div class="pq ve">"Simple, consistently-applied rules outperform complex strategies that are poorly executed."</div>
               <div class="pr vf">
-                <div class="pr-item"><span class="pr-n">—</span><span>Crypto : plafond de 5 % du patrimoine brut, panier figé</span></div>
+                <div class="pr-item"><span class="pr-n">—</span><span>Crypto : au-delà de 5 % du patrimoine brut, plus aucun versement — et aucune vente</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>PEA : aucune vente avant la 5ᵉ année</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>Assurance-vie : le contrat ne se ferme jamais (antériorité fiscale)</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>Épargne de précaution : intouchable sauf urgence réelle</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>Pas de levier, pas de dérivés, pas de rotation</span></div>
               </div>
               <div class="pr ve">
-                <div class="pr-item"><span class="pr-n">—</span><span>Crypto: 5% cap on gross assets, fixed basket</span></div>
+                <div class="pr-item"><span class="pr-n">—</span><span>Crypto: past 5% of gross assets, no further contributions — and no selling</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>PEA: no selling before year 5</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>Life insurance: the policy is never closed (tax seniority)</span></div>
                 <div class="pr-item"><span class="pr-n">—</span><span>Buffer savings: untouched except in a real emergency</span></div>
@@ -1684,6 +1828,7 @@ function setLang(l){
   // Le bouton CV du hero pointe vers la bonne version
   var cv=document.getElementById('cvBtn');
   if(cv)cv.href=(l==='en'?'Mael_Cadiou_CV_EN.pdf':'Mael_Cadiou_CV_FR.pdf');
+  if(window.__atlasRefresh)window.__atlasRefresh();
   try{localStorage.setItem('mc-lang',l);}catch(e){}
 }
 // Restaure la langue choisie précédemment
@@ -1696,9 +1841,14 @@ function setLang(l){
 const nav=document.getElementById('nav');
 const hc=document.querySelector('.hero-c');
 const globe=document.querySelector('.hero-globe');
+const rbFill=document.getElementById('readbarFill');
 window.addEventListener('scroll',()=>{
   const y=window.scrollY;
   nav.classList.toggle('scrolled',y>60);
+  if(rbFill){
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    rbFill.style.width=(max>0?Math.min(100,(y/max)*100):0)+'%';
+  }
   if(reduceMotion)return;
   if(globe)globe.style.transform=`translateY(calc(-50% + ${y*.15}px))`;
   if(hc&&y<window.innerHeight)hc.style.transform=`translateY(${y*.06}px)`;
@@ -1737,12 +1887,29 @@ function openDetail(detailId,focusKey,certFocus,clickedCard){
       });
     }
   }
-  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),60);
+  const st=clickedCard&&clickedCard.dataset.scrollTarget;
+  if(st){
+    setTimeout(()=>{
+      const el=document.getElementById(st);
+      if(!el)return;
+      el.scrollIntoView({behavior:'smooth',block:'center'});
+      el.classList.add('flash');
+      setTimeout(()=>el.classList.remove('flash'),1600);
+    },380);
+  }else{
+    setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),60);
+  }
   setTimeout(()=>triggerAnims(detailId,focusKey,certFocus,clickedCard),120);
 }
 
 document.querySelectorAll('.pcard').forEach(card=>{
   card.addEventListener('click',()=>{
+    const jump=card.dataset.jump;
+    if(jump){
+      const t=document.getElementById(jump);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+      return;
+    }
     const detailId=card.dataset.detail;
     const focusKey=card.dataset.focus||'all';
     const certFocus=card.dataset.certFocus||'all';
@@ -1795,7 +1962,7 @@ function triggerAnims(id,focusKey,certFocus,clickedCard){
         if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
         // Highlight grades visually
         el.style.transition='background .3s';
-        el.style.background='rgba(30,92,58,.06)';
+        el.style.background='rgba(194,86,10,.06)';
         el.style.borderRadius='8px';
         el.style.padding='.5rem';
         setTimeout(()=>{el.style.background='';},1800);
@@ -2029,9 +2196,228 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 });
 
+
+// ── ATLAS : carte du parcours scolaire ─────
+(function(){
+  const cv=document.getElementById('atlasCanvas');
+  if(!cv)return;
+  const GRID={cols:240,rows:87,latTop:73,latBot:-57,data:'AAAAAA9/z4/cAB///wAAAAAAABgDi/////wH4AAAAAPgAAB/4O//gA///oAAAADwAAwPf////////8AAAB//8/+/83HH4AP//gAAAA/+AADnf/////////8+wD/////y9/vF+A//wAAAAD//5n//v////////////G////////8B7g//AIQAAH/+b///////////////GH////////2P8Af4AP4AAfz+3///////////////Aw////////AA+APwAAAAB/v////////////////+AH///////8APAAHwAAAAH/P////////////////wAH/Z/////4APwAAgAAAAH/Gf/////////////g9AAAvAD////8APzAAAAAAADeD////////////+ADAAAANAAf///8AH/gAAAAAOAuL////////////4APgAAAwAAP////wH/wAAAAAOB0P////////////gAPAAAAAAAH////+f/8AAAAAzAr/////////////gAOAAAAAAAD////+P/+AAAAA3n//////////////+AMAAAAAAAB///////+AAAAAHv//////////////9AIAAAAAAABf/////5GAAAAAA///////////////9AAAAAAAAAAP/////+HgAAAAH///////////////4AAAAAAAAAAf/////+AgAAAAB////v9/////////xAAAAAAAAAAf//////gAAAAAB/3/zfx/////////gAAAAAAAAAAf/////yAAAAAAB+b/gPz/////////DgAAAAAAAAAf/////gAAAAAA/wc/gDx////////4FAAAAAAAAAAf/////AAAAAAA/hHdf/4////////wEAAAAAAAAAAf////8AAAAAAA/AAY//5///////kgGAAAAAAAAAAP////4AAAAAAA/AMM//4///////hwEAAAAAAAAAAH////4AAAAAAAIfgAG/////////4wcAAAAAAAAAAD////4AAAAAAAP/gAC/////////gj4AAAAAAAAAAA////gAAAAAAA//gAA/////////wPAAAAAAAAAAAA////AAAAAAAA//8eB/////////4EAAAAAAAAAAAAX///AAAAAAAA//////////////4AAAAAAAAAAAAAH/wBAAAAAAAB//////z///////4AAAAAAAAAAAAAb/gBAAAAAAAH////8/5///////wAAAAAAAAAAAAAF/gAgAAAAAAP////+/4f//////wAAAAAAAAAAAAAA/gAAAAAAAAP/////f8wH/////oAAAAAAAAAAAAAAfgDgAAAAAAf/////P/4D////+IAAAAAAAAAAAAAAPgQIAAAAAAf/////v/8B/8f/QAAAAAAAAACAAAAAPwwMAAAAAAf/////n/wAf4P+QAAAAAAAAAAAAAAAH7gC0AAAAAf/////j/wAfwH+AMAAAAAAAAAAAAAAB/gAAAAAAAf/////z/gAfgH+AMAAAAAAAAAAAAAAAD8AAAAAAAf/////5+AAeAB/AIAAAAAAAAAAAAAAAB8AAAAAAAf/////9wAAOAB/gMAAAAAAAAAAAAAAAAMAAAAAAAf/////+AAAOAAvgBAAAAAAAAAAAAAAAAEDwAAAAAP/////+cAAGAAHAEAAAAAAAAAAAAAAAACDfgAAAAH//////8AAHAACAAAAAAAAAAAAAAAAAAAP/4AAAAH//////4AABAAgADAAAAAAAAAAAAAAAAAP/8AAAAB//////4AABAAQABAAAAAAAAAAAAAAAAAP//gAAAAyD////wAAAACYBgAAAAAAAAAAAAAAAAAP//wAAAAAA////gAAAABYDAAAAAAAAAAAAAAAAAAP//wAAAAAA////AAAAAA4PgAAAAAAAAAAAAAAAAAf//wAAAAAA///+AAAAAA4fOQAAAAAAAAAAAAAAAA///+AAAAAA///8AAAAAAYfEGAAAAAAAAAAAAAAAA////AAAAAA///4AAAAAAcfYBYAAAAAAAAAAAAAAA////+AAAAAf//wAAAAAAOAEA/AAAAAAAAAAAAAAA/////AAAAAP//wAAAAAACAAAPgAAAAAAAAAAAAAAf////gAAAAP//wAAAAAAB4AAPwIAAAAAAAAAAAAAf////gAAAAH//wAAAAAAACsgDICAAAAAAAAAAAAAP////AAAAAH//4AAAAAAAACAAMAAAAAAAAAAAAAAP///+AAAAAH//4AAAAAAAAACAAAAAAAAAAAAAAAAH///8AAAAAH//4AAAAAAAAAHjAAAAAAAAAAAAAAAH///8AAAAAP//4IAAAAAAAAvDgAAAAAAAAAAAAAAB///8AAAAAP//48AAAAAAAB/jgAAAAAAAAAAAAAAA///8AAAAAP//h4AAAAAAAD/7gAACAAAAAAAAAAAAf//8AAAAAP//B4AAAAAAAH//wAAAAAAAAAAAAAAAf//4AAAAAH/+BwAAAAAAAf//4AQAAAAAAAAAAAAAf//4AAAAAH//BwAAAAAAD///8AAAAAAAAAAAAAAAf//AAAAAAD//BwAAAAAAD///+AAAAAAAAAAAAAAAf/8AAAAAAD/+BgAAAAAAD////AAAAAAAAAAAAAAAf/8AAAAAAD/8AAAAAAAAD////AAAAAAAAAAAAAAAf/8AAAAAAD/8AAAAAAAAD////AAAAAAAAAAAAAAA//4AAAAAAB/4AAAAAAAAB////AAAAAAAAAAAAAAA//wAAAAAAA/wAAAAAAAAB////AAAAAAAAAAAAAAA//gAAAAAAA/gAAAAAAAAB/B//AAAAAAAAAAAAAAA//AAAAAAAA+AAAAAAAAAB8Av+AAAAAAAAAAAAAAA/8AAAAAAAAAAAAAAAAAAAAAP8AAQAAAAAAAAAAAB/8AAAAAAAAAAAAAAAAAAAAAH8AAIAAAAAAAAAAAB/4AAAAAAAAAAAAAAAAAAAAADQAAOAAAAAAAAAAAB/gAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAB+AAAAAAAAAAAAAAAAAAAAAAAYAAIAAAAAAAAAAAB+AAAAAAAAAAAAAAAAAAAAAAAYAAwAAAAAAAAAAAD8AAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAD4AAAAAAAAAAAAAAAAAAAAAAAAAHAAAAAAAAAAAAD8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'};
+  const MW=240,MH=87;
+
+  const STOPS=[
+    {lon:-1.1511,lat:46.1603,z:6.5,yrs:11,fr:'La Rochelle & Angers',en:'La Rochelle & Angers',ccFr:'France',ccEn:'France',yr:'2004 — 2015',age:'0 – 10',
+     nFr:"École primaire et collège, entre la Charente-Maritime et le Maine-et-Loire.",
+     nEn:"Primary and middle school, between Charente-Maritime and Maine-et-Loire."},
+    {lon:28.0473,lat:-26.2041,z:4,yrs:5,fr:'Johannesburg',en:'Johannesburg',ccFr:'Afrique du Sud',ccEn:'South Africa',yr:'2015 — 2020',age:'10 – 15',
+     nFr:"Cinq ans au lycée français de Johannesburg. Le premier vrai déracinement, et l'anglais au quotidien.",
+     nEn:"Five years at the French lycée of Johannesburg. The first real uprooting, and English every day."},
+    {lon:103.8198,lat:1.3521,z:4.5,yrs:1,fr:'Singapour',en:'Singapore',ccFr:'Singapour',ccEn:'Singapore',yr:'2020 — 2021',age:'15 – 16',
+     nFr:"Une année au lycée français de Singapour. Deuxième continent, troisième système scolaire.",
+     nEn:"A year at the French lycée of Singapore. Second continent, third school system."},
+    {lon:-1.1511,lat:46.1603,z:6.5,yrs:1,fr:'La Rochelle',en:'La Rochelle',ccFr:'France',ccEn:'France',yr:'2021 — 2022',age:'16 – 17',
+     nFr:"Retour en France pour une année, avant le dernier déménagement du lycée.",
+     nEn:"Back to France for a year, before the last move of secondary school."},
+    {lon:16.3738,lat:48.2082,z:7,yrs:1,fr:'Vienne',en:'Vienna',ccFr:'Autriche',ccEn:'Austria',yr:'2022 — 2023',age:'17 – 18',
+     nFr:"Terminale et baccalauréat au lycée français de Vienne. Spécialités sciences économiques et sociales, et anglais.",
+     nEn:"Final school year and French Baccalaureate at the Lycée Français de Vienne. Economics and English majors."},
+    {lon:4.0317,lat:49.2583,z:7,yrs:2,fr:'Reims',en:'Reims',ccFr:'France',ccEn:'France',yr:'2023 — 2025',age:'18 – 20',
+     nFr:"NEOMA Business School, les deux premières années du programme CESEM.",
+     nEn:"NEOMA Business School, the first two years of the CESEM programme."},
+    {lon:9.6930,lat:45.0526,z:7,yrs:2,fr:'Piacenza',en:'Piacenza',ccFr:'Italie',ccEn:'Italy',yr:'2025 — 2027',age:'20 – 22',
+     nFr:"Università Cattolica del Sacro Cuore. Laurea triennale puis MINT, et le stage à partir de janvier 2027.",
+     nEn:"Università Cattolica del Sacro Cuore. Laurea triennale then MINT, and the internship from January 2027."}
+  ];
+
+  const bin=atob(GRID.data);
+  const bit=i=>(bin.charCodeAt(i>>3)>>(7-(i&7)))&1;
+  const CELLS=[];
+  for(let r=0;r<GRID.rows;r++)for(let c=0;c<GRID.cols;c++){
+    if(bit(r*GRID.cols+c))CELLS.push([c/(GRID.cols-1)*MW,r/(GRID.rows-1)*MH]);
+  }
+  const mx=lon=>(lon+180)/360*MW;
+  const my=lat=>(GRID.latTop-lat)/(GRID.latTop-GRID.latBot)*MH;
+  STOPS.forEach(s=>{s.mx=mx(s.lon);s.my=my(s.lat);});
+
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const ctx=cv.getContext('2d');
+  const ptsWrap=document.getElementById('atlasPts');
+  const axisWrap=document.getElementById('atlasAxis');
+  const readout=document.getElementById('atlasReadout');
+  const resetBtn=document.getElementById('atlasReset');
+  let W=0,H=0,dpr=1,s0=1;
+  let view={k:1,cu:MW/2,cv:MH/2};
+  let from=null,to=null,t0=0,dur=0,raf=null;
+  let active=0,drawn=0,arcT=1,zoomed=false,played=false,timer=null;
+  let ptEls=[],segEls=[];
+
+  const lang=()=>document.body.classList.contains('en')?'en':'fr';
+  function theme(){
+    const d=document.body.classList.contains('dark');
+    return d?{dot:'rgba(240,238,233,.13)',hot:[255,138,43],aMin:.12,aSpan:.45,arc:'rgba(255,138,43,.75)',ghost:'rgba(240,238,233,.08)',cross:'rgba(255,138,43,.16)'}
+            :{dot:'rgba(12,12,10,.24)',hot:[166,70,6],aMin:.34,aSpan:.56,arc:'rgba(166,70,6,.9)',ghost:'rgba(12,12,10,.2)',cross:'rgba(166,70,6,.22)'};
+  }
+  const X=u=>(u-view.cu)*s0*view.k+W/2;
+  const Y=v=>(v-view.cv)*s0*view.k+H/2;
+
+  function drawDots(t){
+    const sp=s0*view.k, r=Math.max(.65,Math.min(3.1,sp*.23));
+    const halo=sp*2.6;
+    for(let i=0;i<CELLS.length;i++){
+      const x=X(CELLS[i][0]),y=Y(CELLS[i][1]);
+      if(x<-6||x>W+6||y<-6||y>H+6)continue;
+      let near=0;
+      for(let j=0;j<STOPS.length;j++){
+        const d=Math.hypot(X(STOPS[j].mx)-x,Y(STOPS[j].my)-y);
+        if(d<halo){const n=1-d/halo;if(n>near)near=n;}
+      }
+      ctx.beginPath();ctx.arc(x,y,r+near*r*.6,0,6.2832);
+      ctx.fillStyle=near>.05?'rgba('+t.hot[0]+','+t.hot[1]+','+t.hot[2]+','+(t.aMin+near*t.aSpan).toFixed(2)+')':t.dot;
+      ctx.fill();
+    }
+  }
+  function drawArc(a,b,p,col,w){
+    const x1=X(a.mx),y1=Y(a.my),x2=X(b.mx),y2=Y(b.my);
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1;
+    const cx=(x1+x2)/2-dy*.22,cy=(y1+y2)/2+dx*.22;
+    ctx.beginPath();
+    const N=48,lim=Math.max(1,Math.round(N*p));
+    for(let i=0;i<=lim;i++){const s=i/N,ia=1-s;
+      const x=ia*ia*x1+2*ia*s*cx+s*s*x2,y=ia*ia*y1+2*ia*s*cy+s*s*y2;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+    ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke();
+  }
+  function draw(){
+    const t=theme();
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);
+    drawDots(t);
+    for(let i=1;i<=drawn&&i<STOPS.length;i++){
+      const last=(i===drawn);
+      drawArc(STOPS[i-1],STOPS[i],last?arcT:1,last?t.arc:t.ghost,last?1.9:1.5);
+    }
+    if(zoomed){
+      const x=X(STOPS[active].mx),y=Y(STOPS[active].my);
+      ctx.strokeStyle=t.cross;ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+    }
+    placePts();
+  }
+  function placePts(){
+    ptEls.forEach(p=>{
+      const x=X(STOPS[p.i].mx),y=Y(STOPS[p.i].my);
+      p.el.style.left=x+'px';p.el.style.top=y+'px';
+      p.el.classList.toggle('vis',x>-40&&x<W+40&&y>-30&&y<H+30);
+    });
+  }
+  function resize(){
+    const r=cv.getBoundingClientRect();
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    W=r.width;H=r.height;
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+    s0=Math.min(W/MW,H/MH);
+    draw();
+  }
+  function ease(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
+  function tick(now){
+    let go=false;
+    if(to){
+      const p=dur?Math.min(1,(now-t0)/dur):1,e=ease(p);
+      view.k=Math.exp(Math.log(from.k)+(Math.log(to.k)-Math.log(from.k))*e);
+      view.cu=from.cu+(to.cu-from.cu)*e;
+      view.cv=from.cv+(to.cv-from.cv)*e;
+      if(p<1)go=true;else to=null;
+    }
+    if(arcT<1){arcT=Math.min(1,arcT+0.0135);go=true;}
+    draw();readoutPaint();
+    raf=go?requestAnimationFrame(tick):null;
+  }
+  function moveTo(k,cu,cv,ms){
+    if(reduce){view={k:k,cu:cu,cv:cv};to=null;draw();readoutPaint();return;}
+    from={k:view.k,cu:view.cu,cv:view.cv};to={k:k,cu:cu,cv:cv};t0=performance.now();dur=ms;
+    if(!raf)raf=requestAnimationFrame(tick);
+  }
+  function world(ms){zoomed=false;resetBtn.classList.remove('vis');moveTo(1,MW/2,MH/2,ms===undefined?900:ms);}
+
+  function fmt(st){
+    const la=st.lat,lo=st.lon;
+    return Math.abs(la).toFixed(2)+'° '+(la>=0?'N':'S')+'  ·  '+Math.abs(lo).toFixed(2)+'° '+(lo>=0?'E':'W');
+  }
+  function readoutPaint(){
+    const L=lang(),st=STOPS[active];
+    readout.innerHTML='<b>'+st[L].toUpperCase()+'</b><br>'+fmt(st)+'<br>'+(L==='en'?'ZOOM':'ZOOM')+' ×'+view.k.toFixed(1);
+  }
+  function cardPaint(){
+    const L=lang(),st=STOPS[active];
+    document.getElementById('atlasYr').textContent=st.yr+'   ·   '+st.age+' '+(L==='en'?'yrs':'ans');
+    document.getElementById('atlasCity').textContent=st[L];
+    document.getElementById('atlasCc').textContent=L==='en'?st.ccEn:st.ccFr;
+    document.getElementById('atlasNote').textContent=L==='en'?st.nEn:st.nFr;
+    ptEls.forEach(p=>p.el.classList.toggle('on',p.i===active||(active===3&&p.i===0)));
+    segEls.forEach(p=>p.el.classList.toggle('on',p.i===active));
+  }
+  function select(i,zoom){
+    stopPlay();
+    active=i;drawn=Math.max(drawn,i);arcT=1;
+    cardPaint();
+    if(zoom){zoomed=true;resetBtn.classList.add('vis');moveTo(STOPS[i].z,STOPS[i].mx,STOPS[i].my,850);}
+    else{draw();readoutPaint();}
+  }
+
+  function build(){
+    ptsWrap.innerHTML='';axisWrap.innerHTML='';ptEls=[];segEls=[];
+    STOPS.forEach((st,i)=>{
+      if(i!==3){
+        const b=document.createElement('button');
+        b.className='atlas-pt';b.type='button';b.innerHTML='<i></i><span></span>';
+        b.addEventListener('click',()=>select(i,true));
+        ptsWrap.appendChild(b);ptEls.push({el:b,i:i});
+      }
+      const g=document.createElement('button');
+      g.className='atlas-seg';g.type='button';g.setAttribute('role','tab');
+      g.style.flexGrow=Math.sqrt(st.yrs);g.innerHTML='<b></b>';
+      g.addEventListener('click',()=>select(i,true));
+      axisWrap.appendChild(g);segEls.push({el:g,i:i});
+    });
+    label();
+  }
+  function label(){
+    const L=lang();
+    ptEls.forEach(p=>{p.el.querySelector('span').textContent=STOPS[p.i][L];});
+    segEls.forEach(p=>{p.el.querySelector('b').textContent=STOPS[p.i][L];
+      p.el.title=STOPS[p.i].yr+' · '+STOPS[p.i][L];});
+    cardPaint();readoutPaint();
+  }
+
+  function stopPlay(){if(timer){clearInterval(timer);timer=null;}}
+  function play(){
+    if(played)return;played=true;
+    drawn=0;arcT=1;active=0;cardPaint();draw();
+    if(reduce){drawn=STOPS.length-1;active=STOPS.length-1;cardPaint();draw();return;}
+    let i=0;
+    setTimeout(()=>{
+      if(!played)return;
+      timer=setInterval(()=>{
+        i++;
+        if(i>=STOPS.length){stopPlay();return;}
+        active=i;drawn=i;arcT=0;cardPaint();
+        if(!raf)raf=requestAnimationFrame(tick);
+      },1450);
+    },1100);
+  }
+
+  build();resize();cardPaint();readoutPaint();
+  resetBtn.addEventListener('click',()=>{stopPlay();world();});
+  cv.addEventListener('click',()=>{if(zoomed){stopPlay();world();}});
+  window.addEventListener('resize',()=>{clearTimeout(window.__arz);window.__arz=setTimeout(resize,160);},{passive:true});
+  new IntersectionObserver((e,o)=>{e.forEach(x=>{if(x.isIntersecting){play();o.disconnect();}});},{threshold:.3})
+    .observe(document.getElementById('atlas'));
+  window.__atlasRefresh=function(){label();draw();readoutPaint();};
+})();
+
 // ── DARK MODE ───────────────────────────────
 function toggleDark(){
   const isDark=document.body.classList.toggle('dark');
+  if(window.__atlasRefresh)window.__atlasRefresh();
   const lbl=document.getElementById('darkLabel');
   if(lbl)lbl.textContent=isDark?'Light':'Dark';
   localStorage.setItem('mc-dark',isDark?'1':'0');
@@ -2047,16 +2433,16 @@ function toggleDark(){
 const thesesFr={
   '0':"Assurance-vie ~59% · mandat de gestion, 16 lignes Europe · 8 ans d'antériorité fiscale",
   '1':'PEA ~27% · une ligne MSCI World · aucune vente avant 5 ans',
-  '3':'Crypto ~8% · panier figé SOL/LINK/AAVE · plafond 5%, versements suspendus',
+  '3':'Crypto ~8% · panier figé SOL/LINK/AAVE · au-dessus du seuil de versement, apports à l\'arrêt',
   '2':'Immobilier fractionné ~4% · 8 projets · loyers réinvestis',
-  '4':'Liquidités ~2% · matelas de précaution à reconstituer'
+  '4':'Liquidités ~2% · poche volontairement basse, remontée au premier salaire'
 };
 const thesesEn={
   '0':'Life insurance ~59% · discretionary mandate, 16 European lines · 8 years of tax seniority',
   '1':'PEA ~27% · one MSCI World line · no selling before year 5',
-  '3':'Crypto ~8% · fixed SOL/LINK/AAVE basket · 5% cap, contributions suspended',
+  '3':'Crypto ~8% · fixed SOL/LINK/AAVE basket · above the contribution threshold, inflows halted',
   '2':'Fractional real estate ~4% · 8 projects · rent reinvested',
-  '4':'Cash ~2% · buffer being rebuilt'
+  '4':'Cash ~2% · deliberately thin, topped up from the first paycheck'
 };
 function updateThesis(idx,lang){
   const theses=lang==='en'?thesesEn:thesesFr;
