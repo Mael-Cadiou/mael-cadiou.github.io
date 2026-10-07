@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>404 — Maël Cadiou</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHRleHQgeD0iMSIgeT0iMjIiIHN0eWxlPSJmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZvbnQtc2l6ZToxOHB4O2ZvbnQtd2VpZ2h0OjMwMDtmb250LXN0eWxlOml0YWxpYztmaWxsOiUyMzFFNUMzQTsiPk08L3RleHQ+PHRleHQgeD0iMTQiIHk9IjIyIiBzdHlsZT0iZm9udC1mYW1pbHk6R2VvcmdpYSxzZXJpZjtmb250LXNpemU6MThweDtmb250LXdlaWdodDozMDA7Zm9udC1zdHlsZTppdGFsaWM7ZmlsbDolMjMwQzBDMEE7Ij5DPC90ZXh0PjxsaW5lIHgxPSIxNCIgeTE9IjI2IiB4Mj0iMzAiIHkyPSIyNiIgc3Ryb2tlPSIlMjMxRTVDM0EiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIyNiIgcj0iMiIgZmlsbD0iJTIzMUU1QzNBIi8+PC9zdmc+">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:   #FAFAF7;
+  --cream:   #F2EFE6;
+  --stone:   #E4DFD0;
+  --ink:     #0C0C0A;
+  --ink2:    #252520;
+  --muted:   #6E6A62;
+  --g:       #C2560A;
+  --gl:      #FF8A2B;
+  --serif:   'Cormorant Garamond', Georgia, serif;
+  --sans:    'Outfit', system-ui, sans-serif;
+}
+body.dark{
+  --white:#08080A;
+  --cream:#101014;
+  --stone:#23232B;
+  --ink:#F0EEE9;
+  --ink2:#C4C2BC;
+  --muted:#7E7D88;
+  --g:#FF8A2B;
+  --gl:#FFC08A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:300;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  -webkit-font-smoothing:antialiased;
+}
+.vf{}.ve{display:none!important;}
+body.en .vf{display:none!important;}
+body.en .ve{display:block!important;}
+.wrap{max-width:560px;text-align:center;}
+.code{
+  font-family:var(--serif);
+  font-size:clamp(7rem,24vw,14rem);
+  font-weight:300;
+  line-height:.9;
+  letter-spacing:-.04em;
+  color:var(--ink);
+}
+.code em{font-style:italic;color:var(--g);}
+.rule{
+  width:56px;height:1px;
+  background:var(--g);
+  margin:2rem auto 2.2rem;
+}
+.msg{
+  font-size:15px;
+  line-height:1.75;
+  color:var(--ink2);
+  margin-bottom:.5rem;
+}
+.msg-alt{
+  font-size:13px;
+  line-height:1.7;
+  color:var(--muted);
+  font-style:italic;
+}
+.back{
+  display:inline-flex;
+  align-items:center;
+  gap:.55rem;
+  margin-top:2.6rem;
+  padding:.8rem 1.5rem;
+  border:1px solid var(--stone);
+  border-radius:2px;
+  font-size:13px;
+  letter-spacing:.04em;
+  color:var(--ink);
+  text-decoration:none;
+  transition:border-color .25s,color .25s,background .25s;
+}
+.back:hover{border-color:var(--g);color:var(--g);background:var(--cream);}
+.back svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;}
+.lang{
+  position:fixed;top:1.4rem;right:1.6rem;
+  display:flex;gap:.3rem;
+}
+.lb{
+  background:none;border:0;cursor:pointer;
+  font-family:var(--sans);font-size:11px;font-weight:400;
+  letter-spacing:.1em;color:var(--muted);
+  padding:.35rem .5rem;
+  transition:color .2s;
+}
+.lb:hover{color:var(--ink);}
+.lb.on{color:var(--g);}
+</style>
+</head>
+<body class="en">
+<script>
+(function(){
+  var saved=null;try{saved=localStorage.getItem('mc-dark');}catch(e){}
+  if(saved!==null?saved==='1':true)document.body.classList.add('dark');
+  var l=null;try{l=localStorage.getItem('mc-lang');}catch(e){}
+  if(l==='fr')document.body.classList.remove('en');
+})();
+</script>
+
+<div class="lang">
+  <button class="lb" onclick="setLang('fr')">FR</button>
+  <button class="lb on" onclick="setLang('en')">EN</button>
+</div>
+
+<div class="wrap">
+  <div class="code">4<em>0</em>4</div>
+  <div class="rule"></div>
+
+  <p class="msg vf">Cette page n'existe pas.</p>
+  <p class="msg ve">This page does not exist.</p>
+
+  <p class="msg-alt vf">This page does not exist.</p>
+  <p class="msg-alt ve">Cette page n'existe pas.</p>
+
+  <a class="back" href="/">
+    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <span class="vf">Retour à l'accueil</span><span class="ve">Back to home</span>
+  </a>
+</div>
+
+<script>
+function setLang(l){
+  document.body.classList.toggle('en',l==='en');
+  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));
+  document.querySelector('[onclick="setLang(\''+l+'\')"]').classList.add('on');
+  document.documentElement.lang=l;
+  try{localStorage.setItem('mc-lang',l);}catch(e){}
+}
+(function(){
+  var l=null;try{l=localStorage.getItem('mc-lang');}catch(e){}
+  if(l==='fr'||l==='en')setLang(l);
+})();
+</script>
+
+<!-- ── MESURE D'AUDIENCE (GoatCounter — page vue seule) ── -->
+<script data-goatcounter="https://maelpeppere.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
