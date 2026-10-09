@@ -18,11 +18,12 @@
 <meta name="twitter:image" content="https://mael-cadiou.github.io/og-image.png">
 <meta property="og:description" content="Finance · Client relations · International — available for a six-month internship, January to June 2027">
 <title>Maël Cadiou — Finance &amp; client relations · Internship Jan. 2027</title>
-   <meta name="google-site-verification" content="MQeWf5Y6kVHmw8_TsIrgB1i2n8F3hGM-EX2hsetB_zs" />
 <meta property="og:locale" content="en_GB">
 <link rel="canonical" href="https://mael-cadiou.github.io/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHRleHQgeD0iMSIgeT0iMjIiIHN0eWxlPSJmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZvbnQtc2l6ZToxOHB4O2ZvbnQtd2VpZ2h0OjMwMDtmb250LXN0eWxlOml0YWxpYztmaWxsOiUyMzFFNUMzQTsiPk08L3RleHQ+PHRleHQgeD0iMTQiIHk9IjIyIiBzdHlsZT0iZm9udC1mYW1pbHk6R2VvcmdpYSxzZXJpZjtmb250LXNpemU6MThweDtmb250LXdlaWdodDozMDA7Zm9udC1zdHlsZTppdGFsaWM7ZmlsbDolMjMwQzBDMEE7Ij5DPC90ZXh0PjxsaW5lIHgxPSIxNCIgeTE9IjI2IiB4Mj0iMzAiIHkyPSIyNiIgc3Ryb2tlPSIlMjMxRTVDM0EiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIyNiIgcj0iMiIgZmlsbD0iJTIzMUU1QzNBIi8+PC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
@@ -40,6 +41,12 @@
   --gl:      #FF8A2B;
   --gp:      #FFE6D2;
   --on-dark: #F4F1EA;
+  /* Segments du schéma finance — bleu foncé → bleu clair → beige */
+  --seg1:    #1A2B3C;
+  --seg2:    #2A4B6C;
+  --seg3:    #7A6850;
+  --seg4:    #5A8FAE;
+  --seg5:    #3D6E96;
   --serif:   'Cormorant Garamond', Georgia, serif;
   --sans:    'Outfit', system-ui, sans-serif;
   --ease:    cubic-bezier(.25,.46,.45,.94);
@@ -61,6 +68,7 @@
 .tape-track{display:flex;width:max-content;align-items:center;animation:tapeL 54s linear infinite;}
 .tape-track-rev{animation:tapeR 40s linear infinite;}
 .tape:hover .tape-track{animation-play-state:paused;}
+.tape.off .tape-track{animation-play-state:paused;}
 @keyframes tapeL{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 @keyframes tapeR{from{transform:translateX(-50%);}to{transform:translateX(0);}}
 .tape-inst{font-family:var(--serif);font-size:1.35rem;font-weight:300;color:var(--ink2);white-space:nowrap;padding:0 1.4rem;display:flex;align-items:center;gap:2.8rem;}
@@ -89,6 +97,12 @@
 .atlas-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .atlas-pts{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .atlas-pt{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;opacity:0;transition:opacity .35s;}
+/* Cible tactile de 44 px sans toucher au point visible de 9 px */
+.atlas-pt::after{content:'';position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);border-radius:50%;background:transparent;}
+/* Les villes européennes sont à quelques pixels les unes des autres à l'échelle
+   mondiale : la pastille survolée ou active passe au-dessus pour rester cliquable. */
+.atlas-pt:hover,.atlas-pt.on{z-index:5;}
+@media(max-width:860px){.atlas-pt::after{width:22px;height:22px;}}
 .atlas-pt.vis{opacity:1;}
 .atlas-pt i{display:block;width:9px;height:9px;border-radius:50%;background:var(--white);border:1.5px solid var(--muted);transition:background .35s,border-color .35s,box-shadow .35s;}
 body.dark .atlas-pt i{background:var(--stone);border-width:1px;}
@@ -383,6 +397,9 @@ section{padding:6rem 3rem;}
 .rv.on{opacity:1;transform:none;}
 .rv2{opacity:0;transform:translateY(24px);transition:opacity .75s .15s var(--ease),transform .75s .15s var(--ease);}
 .rv2.on{opacity:1;transform:none;}
+/* révélation décalée carte par carte dans une même grille */
+.stg>*{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
+.stg.on>*{opacity:1;transform:none;}
 
 /* ═══════════════════════════════════════════
    PREVIEW / EXPAND SYSTEM
@@ -542,7 +559,8 @@ section{padding:6rem 3rem;}
 .dseg:hover,.dseg.hi{stroke-width:26;}
 .dseg.dim{opacity:.15;}
 .dcl{font-family:var(--sans);font-size:11px;fill:var(--muted);font-weight:400;transform:rotate(90deg);transform-origin:100px 100px;}
-.dcp{font-family:var(--serif);font-size:20px;fill:var(--ink);font-weight:300;transform:rotate(90deg);transform-origin:100px 100px;}
+.dcp{font-family:var(--serif);font-size:15px;font-style:italic;fill:var(--ink);font-weight:300;transform:rotate(90deg);transform-origin:100px 100px;}
+.dschema{font-size:11.5px;line-height:1.6;color:var(--muted);font-style:italic;text-align:center;margin:-.75rem auto 1.5rem;max-width:30ch;}
 .dleg{display:flex;flex-direction:column;gap:10px;padding:0 .25rem;}
 .dl{
   display:flex;align-items:center;gap:10px;
@@ -569,7 +587,6 @@ section{padding:6rem 3rem;}
 .a-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
 .a-info{flex:1;}
 .a-n{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--ink);}
-.a-pct{font-style:italic;color:var(--gm);font-size:.9rem;margin-left:6px;}
 .a-s{font-size:12px;color:var(--muted);margin-top:2px;font-weight:300;}
 .a-chev{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;transition:transform .3s var(--ease);flex-shrink:0;}
 .ai.open .a-chev{transform:rotate(180deg);}
@@ -732,6 +749,11 @@ body.dark .menu-toggle span,body.dark .menu-close span{background:var(--ink);}
   .preview-grid,.exp-grid,.cert-grid,.docs-grid,.fin-vis,.sport-grid,.edu-grid,.phil{grid-template-columns:1fr;}
   .phil{display:flex;flex-direction:column;}
   .donut-wrap{position:static;}
+  /* le hero ne doit pas dépasser la hauteur réellement visible : sur iOS,
+     100vh exclut les barres d'outils affichées au chargement */
+  .hero{min-height:100svh;padding-bottom:5.5rem;}
+  /* séparation explicite hero → bandeau (était 0) */
+  .tape{margin-top:1.5rem;}
 }
 
 .pcard.dim-peer{opacity:.42;transform:scale(.97);}
@@ -762,6 +784,12 @@ body.dark{
   --gm:#FFA254;
   --gl:#FFC08A;
   --gp:rgba(255,138,43,.15);
+  /* Segments éclaircis : ≥3:1 contre le fond réel de .fin-sec (#101014) */
+  --seg1:#3E668E;
+  --seg2:#4175A8;
+  --seg3:#9D8769;
+  --seg4:#77A3BC;
+  --seg5:#4F88B7;
 }
 body.dark nav.scrolled{background:rgba(8,8,10,.94);}
 body.dark .edu-main{background:var(--cream);}
@@ -930,6 +958,7 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
   .hero-globe{animation:none!important;}
   .hero-c>*{opacity:1!important;transform:none!important;}
   .rv,.rv2{opacity:1!important;transform:none!important;}
+  .stg>*{opacity:1!important;transform:none!important;transition-delay:0s!important;}
 }
 </style>
 <noscript><style>.hero-c>*{opacity:1!important;transform:none!important;}</style></noscript>
@@ -1493,11 +1522,11 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
     </div>
     <div class="preview-grid rv2" id="finPrev">
       <div class="pcard" data-detail="finDet" data-focus="all">
-        <div class="pcard-num">~86%</div>
-        <div class="pcard-title vf">Alloué au long terme</div><div class="pcard-title ve">Allocated long term</div>
-        <div class="pcard-sub vf">Assurance-vie ~59% + PEA ~27%</div>
-        <div class="pcard-sub ve">Life insurance ~59% + PEA ~27%</div>
-        <div class="pcard-hint vf">Voir l'allocation</div><div class="pcard-hint ve">See allocation</div>
+        <div class="pcard-num">5</div>
+        <div class="pcard-title vf">Véhicules, un cadre</div><div class="pcard-title ve">Vehicles, one framework</div>
+        <div class="pcard-sub vf">Assurance-vie en mandat, PEA en ETF monde, immobilier fractionné, panier crypto, précaution</div>
+        <div class="pcard-sub ve">Life insurance mandate, PEA world ETF, fractional real estate, crypto basket, buffer</div>
+        <div class="pcard-hint vf">Voir le cadre</div><div class="pcard-hint ve">See the framework</div>
       </div>
       <div class="pcard" data-detail="finDet" data-focus="all" data-acc-open="3">
         <div class="pcard-num">5</div>
@@ -1514,86 +1543,84 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
           <div class="donut-wrap">
             <svg class="donut-svg" viewBox="0 0 200 200" id="donutSvg">
               <circle cx="100" cy="100" r="70" fill="none" stroke="var(--stone)" stroke-width="18" opacity=".5"/>
-              <!-- Assurance-vie 59% = 259.5 -->
-              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="#1A2B3C" stroke-width="18"
-                stroke-dasharray="259.5 180.3" stroke-dashoffset="0" stroke-linecap="round"
-                data-lf="Assurance-vie" data-le="Life insurance" data-p="59" data-i="0"/>
-              <!-- PEA 27% = 118.7 -->
-              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="#2A4B6C" stroke-width="18"
-                stroke-dasharray="118.7 321.1" stroke-dashoffset="-259.5" stroke-linecap="round"
-                data-lf="PEA" data-le="PEA" data-p="27" data-i="1"/>
-              <!-- Crypto 8% = 35.2 -->
-              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="#7A6850" stroke-width="18"
-                stroke-dasharray="35.2 404.6" stroke-dashoffset="-378.2" stroke-linecap="round"
-                data-lf="Crypto" data-le="Crypto" data-p="8" data-i="3"/>
-              <!-- Immobilier fractionné 4% = 17.6 -->
-              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="#5A8FAE" stroke-width="18"
-                stroke-dasharray="17.6 422.2" stroke-dashoffset="-413.4" stroke-linecap="round"
-                data-lf="Immobilier" data-le="Real estate" data-p="4" data-i="2"/>
-              <!-- Liquidités 2% = 8.8 -->
-              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="#3D6E96" stroke-width="18"
-                stroke-dasharray="8.8 431" stroke-dashoffset="-431" stroke-linecap="round"
-                data-lf="Liquidités" data-le="Cash" data-p="2" data-i="4"/>
-              <text x="100" y="94" text-anchor="middle" class="dcl" id="dlabel">Allocation</text>
-              <text x="100" y="114" text-anchor="middle" class="dcp" id="dpct">~100%</text>
+              <!-- Schéma du cadre : cinq segments égaux, aucune pondération réelle -->
+              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="var(--seg1)" stroke-width="18"
+                stroke-dasharray="87.96 351.84" stroke-dashoffset="0" stroke-linecap="round"
+                data-lf="Assurance-vie" data-le="Life insurance" data-rf="Antériorité" data-re="Seniority" data-i="0"/>
+              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="var(--seg2)" stroke-width="18"
+                stroke-dasharray="87.96 351.84" stroke-dashoffset="-87.96" stroke-linecap="round"
+                data-lf="PEA" data-le="PEA" data-rf="Non-vente" data-re="No sale" data-i="1"/>
+              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="var(--seg3)" stroke-width="18"
+                stroke-dasharray="87.96 351.84" stroke-dashoffset="-175.92" stroke-linecap="round"
+                data-lf="Crypto" data-le="Crypto" data-rf="Plafond" data-re="Cap" data-i="3"/>
+              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="var(--seg4)" stroke-width="18"
+                stroke-dasharray="87.96 351.84" stroke-dashoffset="-263.88" stroke-linecap="round"
+                data-lf="Immobilier" data-le="Real estate" data-rf="Réinvesti" data-re="Reinvested" data-i="2"/>
+              <circle class="dseg" cx="100" cy="100" r="70" fill="none" stroke="var(--seg5)" stroke-width="18"
+                stroke-dasharray="87.96 351.84" stroke-dashoffset="-351.84" stroke-linecap="round"
+                data-lf="Précaution" data-le="Buffer" data-rf="Priorité 1" data-re="First" data-i="4"/>
+              <text x="100" y="94" text-anchor="middle" class="dcl" id="dlabel">Cadre</text>
+              <text x="100" y="114" text-anchor="middle" class="dcp" id="dpct">5 règles</text>
             </svg>
+            <div class="dschema vf">Schéma du cadre : les cinq segments sont égaux par construction. Ils ne représentent ni des poids ni des montants.</div>
+            <div class="dschema ve">Diagram of the framework: the five segments are equal by construction. They represent neither weights nor amounts.</div>
             <div class="dleg">
-              <div class="dl" data-i="0"><span class="dl-dot" style="background:#1A2B3C"></span><span class="dl-name vf">Assurance-vie · mandat</span><span class="dl-name ve">Life insurance · mandate</span><span class="dl-pct">~59%</span></div>
-              <div class="dl" data-i="1"><span class="dl-dot" style="background:#2A4B6C"></span><span class="dl-name">PEA · MSCI World</span><span class="dl-pct">~27%</span></div>
-              <div class="dl" data-i="3"><span class="dl-dot" style="background:#7A6850"></span><span class="dl-name">Crypto</span><span class="dl-pct">~8%</span></div>
-              <div class="dl" data-i="2"><span class="dl-dot" style="background:#5A8FAE"></span><span class="dl-name vf">Immobilier fractionné</span><span class="dl-name ve">Fractional real estate</span><span class="dl-pct">~4%</span></div>
-              <div class="dl" data-i="4"><span class="dl-dot" style="background:#3D6E96"></span><span class="dl-name vf">Liquidités</span><span class="dl-name ve">Cash</span><span class="dl-pct">~2%</span></div>
+              <div class="dl" data-i="0"><span class="dl-dot" style="background:var(--seg1)"></span><span class="dl-name vf">Assurance-vie · mandat</span><span class="dl-name ve">Life insurance · mandate</span><span class="dl-pct vf">8 ans</span><span class="dl-pct ve">8 yrs</span></div>
+              <div class="dl" data-i="1"><span class="dl-dot" style="background:var(--seg2)"></span><span class="dl-name vf">PEA · ETF monde</span><span class="dl-name ve">PEA · world index ETF</span><span class="dl-pct vf">5 ans</span><span class="dl-pct ve">5 yrs</span></div>
+              <div class="dl" data-i="3"><span class="dl-dot" style="background:var(--seg3)"></span><span class="dl-name">Crypto</span><span class="dl-pct vf">5 % max</span><span class="dl-pct ve">5% cap</span></div>
+              <div class="dl" data-i="2"><span class="dl-dot" style="background:var(--seg4)"></span><span class="dl-name vf">Immobilier fractionné</span><span class="dl-name ve">Fractional real estate</span><span class="dl-pct vf">Réinvesti</span><span class="dl-pct ve">Reinvested</span></div>
+              <div class="dl" data-i="4"><span class="dl-dot" style="background:var(--seg5)"></span><span class="dl-name vf">Précaution</span><span class="dl-name ve">Buffer</span><span class="dl-pct vf">Priorité 1</span><span class="dl-pct ve">First</span></div>
             </div>
             <!-- Dynamic thesis line -->
             <div class="donut-thesis vf" id="thesisFr">
-              Cinq poches, des règles écrites, un horizon long. Les montants sont modestes : c'est la discipline qui compte.
+              Cinq véhicules, cinq règles écrites, un horizon long. Ce qui se transmet ici, c'est le cadre de décision — pas un inventaire.
             </div>
             <div class="donut-thesis ve" id="thesisEn">
-              Five pockets, written rules, a long horizon. The amounts are modest — the discipline is the point.
+              Five vehicles, five written rules, a long horizon. What is on show here is the decision framework — not an inventory.
             </div>
           </div>
           <!-- Accordion -->
           <div>
             <div class="acc">
               <div class="ai" data-i="0">
-                <div class="ah"><div class="a-dot" style="background:#1A2B3C"></div>
-                  <div class="a-info"><div class="a-n vf">Assurance-vie <span class="a-pct">~59%</span></div><div class="a-n ve">Life insurance <span class="a-pct">~59%</span></div><div class="a-s vf">Mandat de gestion · 16 lignes · Europe</div><div class="a-s ve">Discretionary mandate · 16 lines · Europe</div></div>
+                <div class="ah"><div class="a-dot" style="background:var(--seg1)"></div>
+                  <div class="a-info"><div class="a-n vf">Assurance-vie</div><div class="a-n ve">Life insurance</div><div class="a-s vf">Mandat de gestion · actions européennes</div><div class="a-s ve">Discretionary mandate · European equities</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">La poche principale, en mandat de gestion : seize lignes, exposition européenne, maisons Amundi, BFT et LCL. Le contrat a huit ans d'antériorité fiscale — c'est précisément pour ça qu'il ne doit jamais être fermé, même pour arbitrer. C'est aussi la poche qui m'a appris à lire un relevé de mandat : frais, allocation réelle, écart avec l'indice de référence.</div>
-                <div class="ab ve">The core pocket, under a discretionary mandate: sixteen lines, European exposure, managed by Amundi, BFT and LCL. The policy carries eight years of tax seniority — which is exactly why it is never closed, not even to reallocate. It is also the pocket that taught me to read a mandate statement: fees, actual allocation, drift from the benchmark.</div>
+                <div class="ab vf">Un contrat en mandat de gestion, exposition européenne, maisons Amundi, BFT et LCL. La règle : le contrat ne se ferme jamais, même pour arbitrer. L'antériorité fiscale d'une assurance-vie se compte à partir de l'ouverture et se perd intégralement à la fermeture — au-delà de huit ans, l'abattement annuel sur les plus-values au rachat devient l'atout principal du véhicule. Un arbitrage interne, lui, ne coûte rien fiscalement : il n'y a donc jamais de raison de sortir. C'est aussi le véhicule qui apprend à lire un relevé de mandat — frais, allocation réelle, écart avec l'indice de référence.</div>
+                <div class="ab ve">A policy under a discretionary mandate, European exposure, managed by Amundi, BFT and LCL. The rule: the policy is never closed, not even to reallocate. Tax seniority on a French life-insurance policy runs from the opening date and is lost entirely on closure — past the eight-year mark, the annual allowance on gains at withdrawal becomes the vehicle's main advantage. Switching funds inside the policy, by contrast, is tax-free: there is never a reason to exit. It is also the vehicle that teaches you to read a mandate statement — fees, actual allocation, drift from the benchmark.</div>
               </div>
               <div class="ai" data-i="1">
-                <div class="ah"><div class="a-dot" style="background:#2A4B6C"></div>
-                  <div class="a-info"><div class="a-n vf">PEA · MSCI World <span class="a-pct">~27%</span></div><div class="a-n ve">PEA · MSCI World <span class="a-pct">~27%</span></div><div class="a-s vf">Une seule ligne, versements programmés</div><div class="a-s ve">A single line, scheduled contributions</div></div>
+                <div class="ah"><div class="a-dot" style="background:var(--seg2)"></div>
+                  <div class="a-info"><div class="a-n vf">PEA · ETF indiciel monde</div><div class="a-n ve">PEA · world index ETF</div><div class="a-s vf">Versements programmés · non-vente avant 5 ans</div><div class="a-s ve">Scheduled contributions · no sale before year 5</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">Une seule ligne, un ETF MSCI World capitalisant. Pas de stock picking, pas de rotation sectorielle : à ce niveau d'encours, la diversification d'un indice mondial bat toute tentative de sélection, et les frais de garde pèsent déjà. Règle de non-vente avant cinq ans : l'avantage fiscal du PEA transforme une contrainte en discipline.</div>
-                <div class="ab ve">A single line, a capitalising MSCI World ETF. No stock picking, no sector rotation: at this size, a global index beats any attempt at selection, and custody fees already weigh. No selling before year five: the PEA's tax rule turns a constraint into discipline.</div>
+                <div class="ab vf">Un ETF indiciel monde capitalisant, en versements programmés. Pas de stock picking, pas de rotation sectorielle : sur un portefeuille de petite taille, chaque ligne supplémentaire ajoute des frais fixes sans ajouter de diversification qu'un indice mondial n'apporte pas déjà. Le capitalisant évite le frottement du réinvestissement des dividendes. La règle de non-vente avant cinq ans n'est pas une conviction mais une contrainte reprise du véhicule : un retrait avant la cinquième année clôture le plan et fait perdre l'exonération d'impôt sur les gains. Le cadre fiscal fait le travail que la discipline seule ferait mal.</div>
+                <div class="ab ve">A capitalising world index ETF, bought through scheduled contributions. No stock picking, no sector rotation: on a small portfolio, every extra line adds fixed costs without adding diversification a global index does not already provide. The capitalising share class avoids the friction of reinvesting dividends. The no-sale-before-year-five rule is not a conviction but a constraint borrowed from the vehicle: a withdrawal before year five closes the plan and forfeits the tax exemption on gains. The tax framework does the work discipline alone would do badly.</div>
               </div>
               <div class="ai" data-i="3">
-                <div class="ah"><div class="a-dot" style="background:#7A6850"></div>
-                  <div class="a-info"><div class="a-n">Crypto <span class="a-pct">~8%</span></div><div class="a-s vf">Panier figé SOL · LINK · AAVE — plafond à l'achat 5%</div><div class="a-s ve">Fixed basket SOL · LINK · AAVE — 5% cap on contributions</div></div>
+                <div class="ah"><div class="a-dot" style="background:var(--seg3)"></div>
+                  <div class="a-info"><div class="a-n">Crypto</div><div class="a-s vf">Panier figé SOL · LINK · AAVE — plafond de 5 % à l'achat</div><div class="a-s ve">Fixed basket SOL · LINK · AAVE — 5% cap on contributions</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">Position satellite, panier figé : SOL en staking, LINK, AAVE. La règle porte sur ce que j'investis, pas sur ce que vaut la poche : je n'apporte plus un euro dès que la crypto dépasse 5 % du patrimoine brut. Elle est aujourd'hui au-dessus après la hausse, donc les versements sont à l'arrêt — mais je ne vends pas pour rééquilibrer, parce qu'une vente forcée coûte plus cher que le déséquilibre qu'elle corrige. Pas de levier, pas de dérivés, pas de rotation.</div>
-                <div class="ab ve">A satellite position, fixed basket: SOL staked, LINK, AAVE. The rule governs what I put in, not what the pocket is worth: not another euro goes in once crypto exceeds 5% of gross assets. It currently sits above that after the rally, so contributions are halted — but I do not sell to rebalance, because a forced sale costs more than the drift it corrects. No leverage, no derivatives, no rotation.</div>
+                <div class="ab vf">Poche satellite, panier figé : SOL en staking, LINK, AAVE. La règle porte sur l'achat, pas sur la valorisation : aucun versement supplémentaire dès que la poche dépasse 5 % du patrimoine brut. La distinction est le cœur du mécanisme. Un plafond sur la valorisation obligerait à vendre après chaque hausse, donc à déclencher l'impôt et des frais pour corriger un écart que le marché peut reprendre seul. Un plafond à l'achat borne le risque au moment où la décision est réellement libre — celui où l'on choisit d'apporter de l'argent. Le corollaire est assumé : la poche peut dériver au-dessus du plafond sans qu'on y touche. Pas de levier, pas de dérivés, pas de rotation.</div>
+                <div class="ab ve">A satellite pocket, fixed basket: SOL staked, LINK, AAVE. The rule governs buying, not valuation: no further contribution once the pocket exceeds 5% of gross assets. That distinction is the heart of the mechanism. A cap on valuation would force a sale after every rally — triggering tax and fees to correct a drift the market may well undo on its own. A cap on contributions bounds the risk at the moment the decision is genuinely free: the moment you choose to put money in. The corollary is accepted deliberately: the pocket may drift above the cap and is left alone. No leverage, no derivatives, no rotation.</div>
               </div>
               <div class="ai" data-i="2">
-                <div class="ah"><div class="a-dot" style="background:#5A8FAE"></div>
-                  <div class="a-info"><div class="a-n vf">Immobilier fractionné <span class="a-pct">~4%</span></div><div class="a-n ve">Fractional real estate <span class="a-pct">~4%</span></div><div class="a-s vf">8 projets · loyers réinvestis</div><div class="a-s ve">8 projects · rent reinvested</div></div>
+                <div class="ah"><div class="a-dot" style="background:var(--seg4)"></div>
+                  <div class="a-info"><div class="a-n vf">Immobilier fractionné</div><div class="a-n ve">Fractional real estate</div><div class="a-s vf">Loyers réinvestis à l'échéance</div><div class="a-s ve">Rent reinvested at maturity</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">Huit projets en immobilier fractionné, montants faibles, loyers réinvestis à l'échéance. L'intérêt réel n'est pas le rendement : c'est une classe d'actifs illiquide, avec un risque d'exploitation et un risque de plateforme que je n'aurais pas compris sans y mettre de l'argent.</div>
-                <div class="ab ve">Eight fractional real-estate projects, small amounts, rent reinvested at maturity. The real point is not the yield: it is an illiquid asset class, with operating and platform risk I would not have understood without putting money in.</div>
+                <div class="ab vf">De l'immobilier fractionné par petits tickets, loyers réinvestis à l'échéance plutôt que perçus. La règle de réinvestissement tient à la nature du véhicule : les loyers arrivent en flux trop petits pour être réemployés utilement ailleurs, et les sortir reviendrait à transformer un placement de capitalisation en revenu d'appoint fiscalisé. L'intérêt réel n'est pas le rendement affiché mais l'apprentissage : c'est une classe illiquide, où le risque d'exploitation et le risque de plateforme ne se comprennent vraiment qu'en y ayant engagé de l'argent.</div>
+                <div class="ab ve">Fractional real estate in small tickets, rent reinvested at maturity rather than drawn. The reinvestment rule follows from the vehicle itself: rent arrives in flows too small to redeploy usefully elsewhere, and drawing it would turn a compounding holding into taxable side income. The real point is not the headline yield but the learning: this is an illiquid class where operating risk and platform risk only become concrete once your own money is committed.</div>
               </div>
               <div class="ai" data-i="4">
-                <div class="ah"><div class="a-dot" style="background:#3D6E96"></div>
-                  <div class="a-info"><div class="a-n vf">Liquidités <span class="a-pct">~2%</span></div><div class="a-n ve">Cash <span class="a-pct">~2%</span></div><div class="a-s vf">Matelas de précaution · volontairement bas</div><div class="a-s ve">Buffer · deliberately thin</div></div>
+                <div class="ah"><div class="a-dot" style="background:var(--seg5)"></div>
+                  <div class="a-info"><div class="a-n vf">Précaution</div><div class="a-n ve">Buffer</div><div class="a-s vf">Reconstituée avant toute autre poche</div><div class="a-s ve">Refilled before any other pocket</div></div>
                   <svg class="a-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <div class="ab vf">Poche volontairement faible : un étudiant sans revenu jusqu'au stage de janvier n'a pas de trésorerie à faire dormir, et chaque euro laissé en liquidités est un euro qui ne travaille pas pendant trois ans. L'ordre de priorité est écrit d'avance — le premier salaire remonte cette poche avant d'alimenter les autres.</div>
-                <div class="ab ve">Deliberately thin: a student with no income until the January internship has no cash to park, and every euro left in cash is a euro not working for three years. The order of priority is written in advance — the first paycheck tops this pocket up before feeding the others.</div>
+                <div class="ab vf">La poche de précaution a une règle de priorité, pas une cible de rendement : tout revenu entrant la reconstitue avant d'alimenter quoi que ce soit d'autre, et elle reste intouchable hors urgence réelle. Sa fonction est d'éviter la vente forcée. Sans elle, le moindre imprévu obligerait à liquider une ligne au pire moment et à casser une règle — non-vente du PEA, maintien du contrat d'assurance-vie. C'est donc la poche qui protège toutes les autres, et c'est à ce titre, et non pour son rendement, qu'elle passe en premier.</div>
+                <div class="ab ve">The buffer has a priority rule, not a return target: any incoming income refills it before feeding anything else, and it stays untouched short of a real emergency. Its function is to prevent forced selling. Without it, any unexpected expense would mean liquidating a position at the worst moment and breaking a rule — no PEA sale, keep the life-insurance policy open. It is therefore the pocket that protects all the others, and that, not its yield, is why it comes first.</div>
               </div>
             </div>
             <div class="phil">
@@ -1678,8 +1705,8 @@ body.using-kb,body.using-kb *{cursor:auto!important;}
           <div class="sport-side">
             <div class="sc">
               <div class="sc-title vf" id="rugbyCard">Héritage rugby</div><div class="sc-title ve">Rugby heritage</div>
-              <div class="sc-text vf">Plusieurs années en club, jusqu'au départ pour Johannesburg. Ce que j'en garde est concret : on joue le rôle que le poste demande, pas celui qu'on préférerait, et une mêlée ne tient que si les huit poussent au même moment. Je ne joue plus en compétition mais je suis le jeu de près — Six Nations, Top 14, Champions Cup.</div>
-              <div class="sc-text ve">Several years at club level, until the move to Johannesburg. What stayed with me is concrete: you play the role the position demands, not the one you would prefer, and a scrum only holds if all eight push at the same moment. I no longer compete but I follow the game closely — Six Nations, Top 14, Champions Cup.</div>
+              <div class="sc-text vf">Commencé à Johannesburg — le pays qui prend ce sport le plus au sérieux — et arrêté à Vienne : le rugby a suivi le même itinéraire que le reste. Ce que j'en garde est concret : on joue le poste que l'équipe donne, pas celui qu'on préférerait, et une mêlée ne tient que si les huit poussent au même moment. Je ne joue plus en compétition mais je suis le jeu de près — Six Nations, Top 14, Champions Cup.</div>
+              <div class="sc-text ve">Started in Johannesburg — the country that takes the game most seriously — and stopped in Vienna: rugby followed the same route as everything else. What stayed with me is concrete: you play the position the team gives you, not the one you would prefer, and a scrum only holds if all eight push at the same moment. I no longer compete but I follow the game closely — Six Nations, Top 14, Champions Cup.</div>
               <div class="rugby-badge">🏉 <span class="vf">Socle de valeurs</span><span class="ve">Foundation of values</span></div>
             </div>
             <div class="sc">
@@ -1921,11 +1948,40 @@ window.addEventListener('scroll',()=>{
   if(hc&&y<window.innerHeight)hc.style.transform=`translateY(${y*.06}px)`;
 },{passive:true});
 
+// ── SCROLL REVEAL : grilles décalées carte par carte ──
+// Les grilles de cartes passent en .stg et sortent de .rv/.rv2, pour que
+// la révélation porte sur les enfants et non sur le conteneur entier.
+document.querySelectorAll('.preview-grid,.exp-grid,.cert-grid,.docs-grid,.sport-grid,.edu-grid').forEach(g=>{
+  if(g.children.length<2)return;
+  g.classList.remove('rv','rv2');
+  g.classList.add('stg');
+});
+const stgObs=new IntersectionObserver((entries,obs)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    Array.prototype.forEach.call(e.target.children,(c,i)=>{
+      c.style.transitionDelay=(i*50)+'ms';
+    });
+    e.target.classList.add('on');
+    obs.unobserve(e.target);
+  });
+},{threshold:.1});
+document.querySelectorAll('.stg').forEach(el=>stgObs.observe(el));
+
 // ── SCROLL REVEAL ──────────────────────────
 const rvObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
 },{threshold:.1});
 document.querySelectorAll('.rv,.rv2').forEach(el=>rvObs.observe(el));
+
+// ── BANDEAU : animation en pause hors du viewport ──
+(function(){
+  const tape=document.querySelector('.tape');
+  if(!tape)return;
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>tape.classList.toggle('off',!e.isIntersecting));
+  },{threshold:0}).observe(tape);
+})();
 
 // ── PREVIEW CARD → DETAIL PANEL ────────────
 function openDetail(detailId,focusKey,certFocus,clickedCard){
@@ -2153,15 +2209,16 @@ function highlightDonut(idx){
   if(seg){
     const l=document.documentElement.lang;
     document.getElementById('dlabel').textContent=l==='en'?seg.dataset.le:seg.dataset.lf;
-    document.getElementById('dpct').textContent='~'+seg.dataset.p+'%';
+    document.getElementById('dpct').textContent=l==='en'?seg.dataset.re:seg.dataset.rf;
     updateThesis(idx,l);
   }
 }
 function resetDonut(){
   document.querySelectorAll('.dseg').forEach(s=>s.classList.remove('dim','hi'));
   document.querySelectorAll('.dl').forEach(d=>d.classList.remove('dim','hi'));
-  document.getElementById('dlabel').textContent=document.documentElement.lang==='en'?'Allocation':'Allocation';
-  document.getElementById('dpct').textContent='~100%';
+  const en=document.documentElement.lang==='en';
+  document.getElementById('dlabel').textContent=en?'Framework':'Cadre';
+  document.getElementById('dpct').textContent=en?'5 rules':'5 règles';
   resetThesis();
 }
 
@@ -2541,18 +2598,18 @@ function toggleDark(){
 
 // ── DONUT TOOLTIP & THESIS ──────────────────
 const thesesFr={
-  '0':"Assurance-vie ~59% · mandat de gestion, 16 lignes Europe · 8 ans d'antériorité fiscale",
-  '1':'PEA ~27% · une ligne MSCI World · aucune vente avant 5 ans',
-  '3':'Crypto ~8% · panier figé SOL/LINK/AAVE · au-dessus du seuil de versement, apports à l\'arrêt',
-  '2':'Immobilier fractionné ~4% · 8 projets · loyers réinvestis',
-  '4':'Liquidités ~2% · poche volontairement basse, remontée au premier salaire'
+  '0':"Assurance-vie en mandat · le contrat ne se ferme jamais : l'antériorité fiscale se perd à la fermeture, pas à l'arbitrage",
+  '1':'PEA · ETF indiciel monde capitalisant · aucune vente avant 5 ans, sinon le plan se clôture et l\'exonération tombe',
+  '3':'Crypto · panier figé SOL/LINK/AAVE · plafond de 5 % du patrimoine brut à l\'achat, jamais sur la valorisation',
+  '2':'Immobilier fractionné · loyers réinvestis à l\'échéance plutôt que perçus, pour rester un placement de capitalisation',
+  '4':'Précaution · reconstituée avant toute autre poche : c\'est elle qui évite la vente forcée'
 };
 const thesesEn={
-  '0':'Life insurance ~59% · discretionary mandate, 16 European lines · 8 years of tax seniority',
-  '1':'PEA ~27% · one MSCI World line · no selling before year 5',
-  '3':'Crypto ~8% · fixed SOL/LINK/AAVE basket · above the contribution threshold, inflows halted',
-  '2':'Fractional real estate ~4% · 8 projects · rent reinvested',
-  '4':'Cash ~2% · deliberately thin, topped up from the first paycheck'
+  '0':'Life insurance mandate · the policy is never closed: tax seniority is lost on closure, not on switching funds',
+  '1':'PEA · capitalising world index ETF · no sale before year 5, or the plan closes and the exemption is forfeited',
+  '3':'Crypto · fixed SOL/LINK/AAVE basket · 5% of gross assets capped on contributions, never on valuation',
+  '2':'Fractional real estate · rent reinvested at maturity rather than drawn, to stay a compounding holding',
+  '4':'Buffer · refilled before any other pocket: it is what prevents forced selling'
 };
 function updateThesis(idx,lang){
   const theses=lang==='en'?thesesEn:thesesFr;
@@ -2574,8 +2631,8 @@ function resetThesis(){
     el.classList.remove('flash');
     void el.offsetWidth;
     el.textContent=lang==='en'
-      ?'Five pockets, written rules, a long horizon. The amounts are modest — the discipline is the point.'
-      :"Cinq poches, des règles écrites, un horizon long. Les montants sont modestes : c'est la discipline qui compte.";
+      ?'Five vehicles, five written rules, a long horizon. What is on show here is the decision framework — not an inventory.'
+      :"Cinq véhicules, cinq règles écrites, un horizon long. Ce qui se transmet ici, c'est le cadre de décision — pas un inventaire.";
     el.classList.add('flash');
   }
 }
